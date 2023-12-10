@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ApiApplication {
 	private final static String DATABASE = "";
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
 	}
 

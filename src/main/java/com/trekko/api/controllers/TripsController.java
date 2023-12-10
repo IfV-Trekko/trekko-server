@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.trekko.api.models.Trip;
 import com.trekko.api.repositories.TripRepository;
 
 @RestController
@@ -19,7 +20,10 @@ public class TripsController {
   }
 
   @GetMapping
-  public String helloWorld() {
-    return "Hello from TripsController :)";
+  public String getTrips() {
+    // var trip = new Trip("uid", 0, 0, null);
+    // tripRepository.saveTrip(trip);
+    var trip = tripRepository.getFirst();
+    return trip.getUid();
   }
 }

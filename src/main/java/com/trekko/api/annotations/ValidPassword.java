@@ -5,23 +5,20 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.regex.Pattern;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 @Documented
 @Constraint(validatedBy = PasswordValidator.class)
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-// @NotBlank(message = "Password cannot be blank")
-// @Size(min = 8, message = "Password must be at least 8 characters long")
 public @interface ValidPassword {
-  String message() default "Invalid password";
+  String message()
+
+  default "FAILED_INVALID_PASSWORD";
 
   Class<?>[] groups() default {};
 
@@ -29,7 +26,15 @@ public @interface ValidPassword {
 }
 
 class PasswordValidator implements ConstraintValidator<ValidPassword, String> {
-  private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$";
+  /**
+   * At least length 8
+   * At least 1 digit
+   * At least 1 lower case letter
+   * At least 1 upper case letter
+   * At least 1 special character
+   * Considered special characters are: ! @ # $ & * _ - + = | : . ?
+   */
+  private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$&*_.\\-+=|:?]).{8,}$";
 
   @Override
   public void initialize(final ValidPassword constraintAnnotation) {
@@ -37,9 +42,6 @@ class PasswordValidator implements ConstraintValidator<ValidPassword, String> {
 
   @Override
   public boolean isValid(final String password, final ConstraintValidatorContext context) {
-    System.out.println("Validating password: " + password);
-    boolean isValid = password != null && Pattern.matches(PASSWORD_PATTERN, password);
-    System.out.println("Validation result: " + isValid);
-    return isValid;
+    return password != null && password.matches(PASSWORD_REGEX);
   }
 }

@@ -17,6 +17,15 @@ public class UserRepository {
   }
 
   public User saveUser(final User user) {
-    return datastore.save(user);
+    return this.datastore.save(user);
+  }
+
+  public User findByEmail(final String email) {
+    return this.datastore.find(User.class).stream().filter(user -> user.getEmail().equals(email)).findFirst()
+        .orElse(null);
+  }
+
+  public boolean existsByEmail(final String email) {
+    return this.findByEmail(email) != null;
   }
 }

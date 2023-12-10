@@ -20,6 +20,7 @@ public class Trip {
 
   private long startTimestamp;
   private long endTimetamp;
+  private long distance;
 
   @Property("vehicles")
   private Set<Vehicle> vehicles = new HashSet<>();
@@ -31,70 +32,77 @@ public class Trip {
   @Property("updatedAt")
   private Date updatedAt;
 
-  public Trip(final String uid, final long startTimestamp, final long endTimetamp, final Set<Vehicle> vehicles) {
-    this(uid, startTimestamp, endTimetamp, vehicles, null, null);
+  public Trip(final String uid, final long startTimestamp, final long endTimetamp, final long distance,
+      final Set<Vehicle> vehicles) {
+    this(uid, startTimestamp, endTimetamp, distance, vehicles, null, null);
   }
 
-  public Trip(final String uid, final long startTimestamp, final long endTimetamp, final Set<Vehicle> vehicles,
+  public Trip(final String uid, final long startTimestamp, final long endTimetamp, final long distance,
+      final Set<Vehicle> vehicles,
       final String purpose, final String comment) {
     this.id = new ObjectId();
     this.uid = uid;
     this.startTimestamp = startTimestamp;
     this.endTimetamp = endTimetamp;
+    this.distance = distance;
     this.vehicles = vehicles;
     this.purpose = purpose;
     this.comment = comment;
   }
 
   public ObjectId getId() {
-    return id;
+    return this.id;
   }
 
   public String getUid() {
-    return uid;
+    return this.uid;
   }
 
   public long getStartTimestamp() {
-    return startTimestamp;
+    return this.startTimestamp;
   }
 
   public long getEndTimetamp() {
-    return endTimetamp;
+    return this.endTimetamp;
+  }
+
+  public long getDistance() {
+    return this.distance;
   }
 
   public Set<Vehicle> getVehicles() {
-    return vehicles;
+    return this.vehicles;
   }
 
   public String getPurpose() {
-    return purpose;
+    return this.purpose;
   }
 
   public String getComment() {
-    return comment;
+    return this.comment;
   }
 
   public Date getCreatedAt() {
-    return createdAt;
+    return this.createdAt;
   }
 
   public Date getUpdatedAt() {
-    return updatedAt;
+    return this.updatedAt;
   }
 
   @PrePersist
   protected void prePersist() {
     final Date now = new Date();
 
-    if (createdAt == null) {
-      createdAt = now;
+    if (this.createdAt == null) {
+      this.createdAt = now;
     }
 
-    updatedAt = now;
+    this.updatedAt = now;
   }
 
   @Override
   public String toString() {
-    return String.format("Trip[id=%s]", id);
+    return String.format("Trip[id=%s]", this.id);
   }
 }

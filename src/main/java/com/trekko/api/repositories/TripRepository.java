@@ -18,18 +18,18 @@ public class TripRepository {
   }
 
   public Trip saveTrip(final Trip trip) {
-    return datastore.save(trip);
+    return this.datastore.save(trip);
   }
 
   public Trip findTripById(final ObjectId id) {
-    return datastore.find(Trip.class).stream().filter(trip -> trip.getId().equals(id)).findFirst().orElse(null);
+    return this.datastore.find(Trip.class).stream().filter(trip -> trip.getId().equals(id)).findFirst().orElse(null);
   }
 
   public Trip getFirst() {
-    return datastore.find(Trip.class).first();
+    return this.datastore.find(Trip.class).first();
   }
 
   public long getCount() {
-    return datastore.find(Trip.class).count();
+    return this.datastore.find(Trip.class).count();
   }
 }

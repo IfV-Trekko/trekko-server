@@ -21,9 +21,9 @@ public class TripsController {
 
   @GetMapping
   public String getTrips() {
-    // var trip = new Trip("uid", 0, 0, null);
-    // tripRepository.saveTrip(trip);
-    var trip = tripRepository.getFirst();
+    var trip = new Trip("uid", 0, 0, 1, null);
+    tripRepository.saveTrip(trip);
+    // var trip = tripRepository.getFirst();
     return trip.getUid();
   }
 }

@@ -8,7 +8,6 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
-import jakarta.validation.constraints.Email;
 
 @Entity("users")
 public class User {
@@ -16,7 +15,6 @@ public class User {
   @Id
   private final ObjectId id;
 
-  @Email(message = "Email should be valid")
   private final String email;
 
   private final String passwordHash;
@@ -26,20 +24,39 @@ public class User {
   @Property("updatedAt")
   private Date updatedAt;
 
+  // TODO: why is this needed?
+  public User() {
+    this.id = new ObjectId();
+    this.email = null;
+    this.passwordHash = null;
+  }
+
   public User(final String email, final String passwordHash) {
     this.id = new ObjectId();
     this.email = email;
     this.passwordHash = passwordHash;
   }
 
+  public ObjectId getId() {
+    return this.id;
+  }
+
+  public String getEmail() {
+    return this.email;
+  }
+
+  public String getPasswordHash() {
+    return this.passwordHash;
+  }
+
   @PrePersist
   protected void prePersist() {
     final Date now = new Date();
 
-    if (createdAt == null) {
-      createdAt = now;
+    if (this.createdAt == null) {
+      this.createdAt = now;
     }
 
-    updatedAt = now;
+    this.updatedAt = now;
   }
 }

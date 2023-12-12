@@ -1,6 +1,8 @@
 package com.trekko.api.models;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 
@@ -8,16 +10,18 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Reference;
 
 @Entity("users")
 public class User {
 
   @Id
   private final ObjectId id;
-
   private final String email;
-
   private final String passwordHash;
+
+  @Reference
+  private final List<Trip> trips = new ArrayList<>();
 
   @Property("createdAt")
   private Date createdAt;
@@ -48,6 +52,15 @@ public class User {
   public String getPasswordHash() {
     return this.passwordHash;
   }
+
+  // public List<Trip> getTrips() {
+  // return this.trips;
+  // }
+
+  // public void addTrip(final Trip trip) {
+  // this.trips.add(trip);
+  // trip.setUser(this);
+  // }
 
   @PrePersist
   protected void prePersist() {

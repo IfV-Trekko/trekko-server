@@ -1,6 +1,8 @@
 package com.trekko.api.repositories;
 
 import dev.morphia.Datastore;
+
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -20,12 +22,20 @@ public class UserRepository {
     return this.datastore.save(user);
   }
 
-  public User findByEmail(final String email) {
+  public User findUserById(final ObjectId id) {
+    return this.datastore.find(User.class).stream().filter(user -> user.getId().equals(id)).findFirst().orElse(null);
+  }
+
+  public User findUserById(final String id) {
+    return this.findUserById(new ObjectId(id));
+  }
+
+  public User findUserByEmail(final String email) {
     return this.datastore.find(User.class).stream().filter(user -> user.getEmail().equals(email)).findFirst()
         .orElse(null);
   }
 
   public boolean existsByEmail(final String email) {
-    return this.findByEmail(email) != null;
+    return this.findUserByEmail(email) != null;
   }
 }

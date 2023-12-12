@@ -2,6 +2,7 @@ package com.trekko.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -10,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.trekko.api.config.ResponseCodec;
+import com.trekko.api.dtos.ErrorResponseDTO;
 import com.trekko.api.dtos.SignInRequestDTO;
 import com.trekko.api.dtos.SignUpRequestDTO;
 import com.trekko.api.dtos.SignUpResponseDTO;
 import com.trekko.api.models.User;
 import com.trekko.api.repositories.UserRepository;
+import com.trekko.api.utils.JwtUtil;
 
 import jakarta.validation.Valid;
 
@@ -56,13 +60,17 @@ public class AuthController {
     System.out.println(signInDTO.getEmail());
     System.out.println(signInDTO.getPassword());
 
-    // final var user = userRepository.findByEmail(signInDTO.getEmail());
+    final var user = userRepository.findUserByEmail(signInDTO.getEmail());
+    if (user == null)
+      return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseCodec.FAILED_USER_NOT_FOUND));
 
-    return ResponseEntity.ok().body(null);
+    final boolean isPasswordValid = BCrypt.checkpw(signInDTO.getPassword(), user.getPasswordHash());
+    if (!isPasswordValid)
+      return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseCodec.FAILED_INVALID_CREDENTIALS));
 
-    // final var signUpResponse = new SignUpResponseDTO();
+    final String token = JwtUtil.generateToken(user.getId().toString());
 
-    // return ResponseEntity.ok().body(signUpResponse);
+    return ResponseEntity.ok().body("Success. Token: " + token);
   }
 
   private String hashPassword(final String plainPassword) {

@@ -28,7 +28,7 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
   @Bean
   public MongoClient mongoClient() {
     final ConnectionString connectionString = new ConnectionString(
-        "mongodb+srv://main:uKHnG1airuZyHPGe@trekko.3vwe8kl.mongodb.net/?retryWrites=true&w=majority");
+        "mongodb+srv://main:uKHnG1airuZyHPGe@trekko.3vwe8kl.mongodb.net/?retryWrites=true&w=majority"); // TODO
     final MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
         .applyConnectionString(connectionString)
         .build();

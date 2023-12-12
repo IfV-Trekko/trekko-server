@@ -4,6 +4,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Reference;
 
 import org.bson.types.ObjectId;
 
@@ -20,12 +21,15 @@ public class Trip {
 
   private long startTimestamp;
   private long endTimetamp;
-  private long distance;
+  private double distance;
 
   @Property("vehicles")
   private Set<Vehicle> vehicles = new HashSet<>();
   private String purpose;
   private String comment;
+
+  @Reference
+  private User user;
 
   @Property("createdAt")
   private Date createdAt;
@@ -33,12 +37,12 @@ public class Trip {
   private Date updatedAt;
 
   public Trip(final String uid, final long startTimestamp, final long endTimetamp, final long distance,
-      final Set<Vehicle> vehicles) {
-    this(uid, startTimestamp, endTimetamp, distance, vehicles, null, null);
+      final Set<Vehicle> vehicles, final User user) {
+    this(uid, startTimestamp, endTimetamp, distance, vehicles, user, null, null);
   }
 
   public Trip(final String uid, final long startTimestamp, final long endTimetamp, final long distance,
-      final Set<Vehicle> vehicles,
+      final Set<Vehicle> vehicles, final User user,
       final String purpose, final String comment) {
     this.id = new ObjectId();
     this.uid = uid;
@@ -46,6 +50,7 @@ public class Trip {
     this.endTimetamp = endTimetamp;
     this.distance = distance;
     this.vehicles = vehicles;
+    this.user = user;
     this.purpose = purpose;
     this.comment = comment;
   }
@@ -66,12 +71,20 @@ public class Trip {
     return this.endTimetamp;
   }
 
-  public long getDistance() {
+  public double getDistance() {
     return this.distance;
   }
 
   public Set<Vehicle> getVehicles() {
     return this.vehicles;
+  }
+
+  public User getUser() {
+    return this.user;
+  }
+
+  public void setUser(final User user) {
+    this.user = user;
   }
 
   public String getPurpose() {

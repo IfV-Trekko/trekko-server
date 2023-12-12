@@ -5,11 +5,11 @@ import java.util.Date;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
-public final class JwtUtil {
+public final class JwtUtils {
   private static final long EXPIRATION_TIME = 864_000_00; // 1 day in milliseconds
   private static final String SECRET = "TEST_SECRET"; // TODO
 
-  private JwtUtil() {
+  private JwtUtils() {
   }
 
   public static String generateToken(final String userId) {
@@ -30,7 +30,7 @@ public final class JwtUtil {
     }
   }
 
-  public static String getUserFromToken(final String token) {
+  public static String getUserIdFromToken(final String token) {
     return JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
         .build()
         .verify(token)

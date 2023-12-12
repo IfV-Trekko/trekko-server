@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.trekko.api.config.ResponseCodec;
+import com.trekko.api.config.ResponseReason;
 import com.trekko.api.dtos.ErrorResponseDTO;
 import com.trekko.api.dtos.SignInRequestDTO;
 import com.trekko.api.dtos.SignUpRequestDTO;
 import com.trekko.api.dtos.SignUpResponseDTO;
 import com.trekko.api.models.User;
 import com.trekko.api.repositories.UserRepository;
-import com.trekko.api.utils.JwtUtil;
+import com.trekko.api.utils.JwtUtils;
 
 import jakarta.validation.Valid;
 
@@ -40,7 +40,7 @@ public class AuthController {
     final String userEmail = signUpDTO.getEmail();
 
     if (userRepository.existsByEmail(userEmail)) {
-      return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseCodec.FAILED_EMAIL_ALREADY_IN_USE));
+      return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseReason.FAILED_ACCESS_DENIED));
     }
 
     final String passwordHash = this.hashPassword(signUpDTO.getPassword());
@@ -58,13 +58,12 @@ public class AuthController {
       final BindingResult bindingResult) {
     final var user = userRepository.findUserByEmail(signInDTO.getEmail());
     if (user == null)
-      return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseCodec.FAILED_USER_NOT_FOUND));
+      return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseReason.FAILED_USER_NOT_FOUND));
 
-    final boolean isPasswordValid = BCrypt.checkpw(signInDTO.getPassword(), user.getPasswordHash());
-    if (!isPasswordValid)
-      return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseCodec.FAILED_INVALID_CREDENTIALS));
+    if (!this.isPasswordValid(signInDTO.getPassword(), user.getPasswordHash()))
+      return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseReason.FAILED_INVALID_CREDENTIALS));
 
-    final String token = JwtUtil.generateToken(user.getId().toString());
+    final String token = JwtUtils.generateToken(user.getId().toString());
 
     return ResponseEntity.ok().body("Success. Token: " + token);
   }
@@ -72,5 +71,9 @@ public class AuthController {
   private String hashPassword(final String plainPassword) {
     final var passwordEncoder = new BCryptPasswordEncoder();
     return passwordEncoder.encode(plainPassword);
+  }
+
+  private boolean isPasswordValid(final String plainPassword, final String passwordHash) {
+    return BCrypt.checkpw(plainPassword, passwordHash);
   }
 }

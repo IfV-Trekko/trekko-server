@@ -1,13 +1,15 @@
 package com.trekko.api.dtos;
 
-public class ErrorResponseDTO {
-  private String reason;
+import com.trekko.api.config.ResponseReason;
 
-  public ErrorResponseDTO(final String reason) {
+public class ErrorResponseDTO {
+  private ResponseReason reason;
+
+  public ErrorResponseDTO(final ResponseReason reason) {
     this.reason = reason;
   }
 
   public String getReason() {
-    return this.reason;
+    return this.reason.toString();
   }
 }

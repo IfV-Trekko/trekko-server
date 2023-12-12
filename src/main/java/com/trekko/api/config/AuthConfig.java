@@ -3,7 +3,6 @@ package com.trekko.api.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,12 +16,12 @@ import com.trekko.api.repositories.UserRepository;
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 @Configuration
-public class SecurityConfig {
+public class AuthConfig {
 
   private final UserRepository userRepository;
 
   @Autowired
-  public SecurityConfig(final UserRepository userRepository) {
+  public AuthConfig(final UserRepository userRepository) {
     this.userRepository = userRepository;
   }
 
@@ -34,6 +33,7 @@ public class SecurityConfig {
         // .anyRequest().permitAll())
         .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .addFilterBefore(new JwtAuthFilter(this.userRepository), UsernamePasswordAuthenticationFilter.class)
+        .exceptionHandling(handler -> handler.disable())
         // .httpBasic(Customizer.withDefaults())
         .build();
   }

@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.trekko.api.models.Trip;
-import com.trekko.api.models.User;
-import com.trekko.api.models.Vehicle;
 import com.trekko.api.repositories.TripRepository;
 import com.trekko.api.repositories.UserRepository;
+import com.trekko.api.utils.AuthUtils;
 
 @RestController
 @RequestMapping("/trips")
@@ -31,22 +30,11 @@ public class TripsController {
   @PreAuthorize("isAuthenticated()")
   @GetMapping
   public String getTrips() {
-    // var trip = new Trip("uid", 0, 0, 1, null);
-    // tripRepository.saveTrip(trip);
-    // var trip = tripRepository.getFirst();
-    // return trip.getUid();
+    final var user = AuthUtils.getUserFromContext();
+    System.out.println(user);
+    // var user = this.userRepository.findUserByEmail("email@example.com");
 
-    // userRepository.saveUser(user);
-
-    // var user = new User("email@example.com", "test");
-
-    // var trip = new Trip("uid", 0, 0, 1, new
-    // HashSet<>(Arrays.asList(Vehicle.BIKE)), user, "My purpose", "My comment");
-    // tripRepository.saveTrip(trip);
-    // return trip.getUser();
-
-    var user = this.userRepository.findUserByEmail("email@example.com");
-
+    // return user.getEmail();
     return user.getEmail();
   }
 }

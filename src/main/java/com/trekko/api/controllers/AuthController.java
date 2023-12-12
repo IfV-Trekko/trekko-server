@@ -40,8 +40,7 @@ public class AuthController {
     final String userEmail = signUpDTO.getEmail();
 
     if (userRepository.existsByEmail(userEmail)) {
-      // TODO: throw a better exception
-      throw new RuntimeException("Email already exists");
+      return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseCodec.FAILED_EMAIL_ALREADY_IN_USE));
     }
 
     final String passwordHash = this.hashPassword(signUpDTO.getPassword());
@@ -57,9 +56,6 @@ public class AuthController {
   @PostMapping("/signin")
   public ResponseEntity<?> signIn(@Valid @RequestBody final SignInRequestDTO signInDTO,
       final BindingResult bindingResult) {
-    System.out.println(signInDTO.getEmail());
-    System.out.println(signInDTO.getPassword());
-
     final var user = userRepository.findUserByEmail(signInDTO.getEmail());
     if (user == null)
       return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseCodec.FAILED_USER_NOT_FOUND));

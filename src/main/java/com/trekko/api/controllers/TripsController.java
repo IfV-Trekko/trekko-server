@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,7 @@ public class TripsController {
     this.userRepository = userRepository;
   }
 
+  @PreAuthorize("isAuthenticated()")
   @GetMapping
   public String getTrips() {
     // var trip = new Trip("uid", 0, 0, 1, null);
@@ -43,8 +45,8 @@ public class TripsController {
     // tripRepository.saveTrip(trip);
     // return trip.getUser();
 
-    var user = userRepository.findUserByEmail("email@example.com");
+    var user = this.userRepository.findUserByEmail("email@example.com");
 
-    return "TODO";
+    return user.getEmail();
   }
 }

@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 
 @Configuration
-public class MongoDBConfig extends AbstractMongoClientConfiguration {
+public class MongoDbConfig extends AbstractMongoClientConfiguration {
 
   private final static String USER = "main";
   private final static String PASSWORD = "uKHnG1airuZyHPGe";

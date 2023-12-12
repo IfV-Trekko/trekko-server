@@ -1,22 +1,40 @@
 package com.trekko.api.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.trekko.api.interceptors.JwtAuthFilter;
+import com.trekko.api.repositories.UserRepository;
+
+@EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @Configuration
 public class SecurityConfig {
+
+  private final UserRepository userRepository;
+
+  @Autowired
+  public SecurityConfig(final UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
+
   @Bean
   public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
     return http
         .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests((authz) -> authz
-            .anyRequest().permitAll())
+        // .authorizeHttpRequests((authz) -> authz
+        // .anyRequest().permitAll())
         .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .httpBasic(Customizer.withDefaults())
+        .addFilterBefore(new JwtAuthFilter(this.userRepository), UsernamePasswordAuthenticationFilter.class)
+        // .httpBasic(Customizer.withDefaults())
         .build();
   }
 }

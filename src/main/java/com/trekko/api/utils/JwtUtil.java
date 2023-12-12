@@ -19,7 +19,18 @@ public final class JwtUtil {
         .sign(Algorithm.HMAC512(SECRET.getBytes()));
   }
 
-  public static String validateToken(final String token) {
+  public static boolean isTokenValid(final String token) {
+    try {
+      JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
+          .build()
+          .verify(token);
+      return true;
+    } catch (final Exception e) {
+      return false;
+    }
+  }
+
+  public static String getUserFromToken(final String token) {
     return JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
         .build()
         .verify(token)

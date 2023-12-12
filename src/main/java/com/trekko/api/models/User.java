@@ -20,8 +20,8 @@ public class User {
   private final String email;
   private final String passwordHash;
 
-  @Reference
-  private final List<Trip> trips = new ArrayList<>();
+  // @Reference
+  // private final List<Trip> trips = new ArrayList<>();
 
   @Property("createdAt")
   private Date createdAt;

@@ -15,29 +15,29 @@ import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 @Configuration
 public class MongoDbConfig extends AbstractMongoClientConfiguration {
 
-  private final static String USER = "main";
-  private final static String PASSWORD = "uKHnG1airuZyHPGe";
-  private final static String DATABASE = "trekko";
+    private static final String USER = "main";
+    private static final String PASSWORD = "uKHnG1airuZyHPGe";
+    private static final String DATABASE = "trekko";
 
-  @Override
-  protected String getDatabaseName() {
-    return DATABASE;
-  }
+    @Override
+    protected String getDatabaseName() {
+        return DATABASE;
+    }
 
-  @Override
-  @Bean
-  public MongoClient mongoClient() {
-    final ConnectionString connectionString = new ConnectionString(
-        "mongodb+srv://main:uKHnG1airuZyHPGe@trekko.3vwe8kl.mongodb.net/?retryWrites=true&w=majority"); // TODO
-    final MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
-        .applyConnectionString(connectionString)
-        .build();
+    @Override
+    @Bean
+    public MongoClient mongoClient() {
+        final ConnectionString connectionString = new ConnectionString(
+                "mongodb+srv://main:uKHnG1airuZyHPGe@trekko.3vwe8kl.mongodb.net/?retryWrites=true&w=majority"); // TODO
+        final MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .build();
 
-    return MongoClients.create(mongoClientSettings);
-  }
+        return MongoClients.create(mongoClientSettings);
+    }
 
-  @Bean
-  public Datastore datastore() {
-    return Morphia.createDatastore(mongoClient(), getDatabaseName());
-  }
+    @Bean
+    public Datastore datastore() {
+        return Morphia.createDatastore(mongoClient(), getDatabaseName());
+    }
 }

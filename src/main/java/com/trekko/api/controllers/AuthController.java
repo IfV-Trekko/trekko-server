@@ -27,53 +27,53 @@ import jakarta.validation.Valid;
 @Validated
 public class AuthController {
 
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  @Autowired
-  public AuthController(final UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
-
-  @PostMapping("/signup")
-  public ResponseEntity<?> signUp(@Valid @RequestBody final SignUpRequestDTO signUpDTO,
-      final BindingResult bindingResult) {
-    final String userEmail = signUpDTO.getEmail();
-
-    if (userRepository.existsByEmail(userEmail)) {
-      return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseReason.FAILED_ACCESS_DENIED));
+    @Autowired
+    public AuthController(final UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    final String passwordHash = this.hashPassword(signUpDTO.getPassword());
+    @PostMapping("/signup")
+    public ResponseEntity<?> signUp(@Valid @RequestBody final SignUpRequestDTO signUpDTO,
+            final BindingResult bindingResult) {
+        final String userEmail = signUpDTO.getEmail();
 
-    final var user = new User(userEmail, passwordHash);
-    userRepository.saveUser(user);
+        if (userRepository.existsByEmail(userEmail)) {
+            return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseReason.FAILED_ACCESS_DENIED));
+        }
 
-    final var signUpResponse = new SignUpResponseDTO();
+        final String passwordHash = this.hashPassword(signUpDTO.getPassword());
 
-    return ResponseEntity.ok().body(signUpResponse);
-  }
+        final var user = new User(userEmail, passwordHash);
+        userRepository.saveUser(user);
 
-  @PostMapping("/signin")
-  public ResponseEntity<?> signIn(@Valid @RequestBody final SignInRequestDTO signInDTO,
-      final BindingResult bindingResult) {
-    final var user = userRepository.findUserByEmail(signInDTO.getEmail());
-    if (user == null)
-      return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseReason.FAILED_USER_NOT_FOUND));
+        final var signUpResponse = new SignUpResponseDTO();
 
-    if (!this.isPasswordValid(signInDTO.getPassword(), user.getPasswordHash()))
-      return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseReason.FAILED_INVALID_CREDENTIALS));
+        return ResponseEntity.ok().body(signUpResponse);
+    }
 
-    final String token = JwtUtils.generateToken(user.getId().toString());
+    @PostMapping("/signin")
+    public ResponseEntity<?> signIn(@Valid @RequestBody final SignInRequestDTO signInDTO,
+            final BindingResult bindingResult) {
+        final var user = userRepository.findUserByEmail(signInDTO.getEmail());
+        if (user == null)
+            return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseReason.FAILED_USER_NOT_FOUND));
 
-    return ResponseEntity.ok().body("Success. Token: " + token);
-  }
+        if (!this.isPasswordValid(signInDTO.getPassword(), user.getPasswordHash()))
+            return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseReason.FAILED_INVALID_CREDENTIALS));
 
-  private String hashPassword(final String plainPassword) {
-    final var passwordEncoder = new BCryptPasswordEncoder();
-    return passwordEncoder.encode(plainPassword);
-  }
+        final String token = JwtUtils.generateToken(user.getId().toString());
 
-  private boolean isPasswordValid(final String plainPassword, final String passwordHash) {
-    return BCrypt.checkpw(plainPassword, passwordHash);
-  }
+        return ResponseEntity.ok().body("Success. Token: " + token);
+    }
+
+    private String hashPassword(final String plainPassword) {
+        final var passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.encode(plainPassword);
+    }
+
+    private boolean isPasswordValid(final String plainPassword, final String passwordHash) {
+        return BCrypt.checkpw(plainPassword, passwordHash);
+    }
 }

@@ -18,23 +18,23 @@ import com.trekko.api.utils.AuthUtils;
 @RequestMapping("/trips")
 public class TripsController {
 
-  private final TripRepository tripRepository;
-  private final UserRepository userRepository;
+    private final TripRepository tripRepository;
+    private final UserRepository userRepository;
 
-  @Autowired
-  public TripsController(final TripRepository tripRepository, final UserRepository userRepository) {
-    this.tripRepository = tripRepository;
-    this.userRepository = userRepository;
-  }
+    @Autowired
+    public TripsController(final TripRepository tripRepository, final UserRepository userRepository) {
+        this.tripRepository = tripRepository;
+        this.userRepository = userRepository;
+    }
 
-  @PreAuthorize("isAuthenticated()")
-  @GetMapping
-  public String getTrips() {
-    final var user = AuthUtils.getUserFromContext();
-    System.out.println(user);
-    // var user = this.userRepository.findUserByEmail("email@example.com");
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping
+    public String getTrips() {
+        final var user = AuthUtils.getUserFromContext();
+        System.out.println(user);
+        // var user = this.userRepository.findUserByEmail("email@example.com");
 
-    // return user.getEmail();
-    return user.getEmail();
-  }
+        // return user.getEmail();
+        return user.getEmail();
+    }
 }

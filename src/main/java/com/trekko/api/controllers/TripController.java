@@ -13,17 +13,17 @@ import com.trekko.api.repositories.UserRepository;
 @RequestMapping("/trips/{uid}")
 public class TripController {
 
-  private final TripRepository tripRepository;
-  private final UserRepository userRepository;
+    private final TripRepository tripRepository;
+    private final UserRepository userRepository;
 
-  @Autowired
-  public TripController(final TripRepository tripRepository, final UserRepository userRepository) {
-    this.tripRepository = tripRepository;
-    this.userRepository = userRepository;
-  }
+    @Autowired
+    public TripController(final TripRepository tripRepository, final UserRepository userRepository) {
+        this.tripRepository = tripRepository;
+        this.userRepository = userRepository;
+    }
 
-  @GetMapping
-  public String getTrip(@PathVariable final String uid) {
-    return uid;
-  }
+    @GetMapping
+    public String getTrip(@PathVariable final String uid) {
+        return uid;
+    }
 }

@@ -12,13 +12,8 @@ import jakarta.validation.constraints.NotBlank;
 @RequestMapping("/form")
 public class FormController {
 
-  @PostMapping
-  public String getForm(@Valid @RequestBody final TestDTO testDTO) {
-    return "Form";
-  }
-}
-
-class TestDTO {
-  @NotBlank(message = "FAILED_A_REQUIRED")
-  private String a;
+    @PostMapping
+    public String getForm() {
+        return "Form";
+    }
 }

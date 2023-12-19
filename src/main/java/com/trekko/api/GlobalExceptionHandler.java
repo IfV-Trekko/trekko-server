@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import com.trekko.api.config.ResponseReason;
 import com.trekko.api.dtos.ErrorResponseDTO;
+import com.trekko.api.exceptions.JwtAuthException;
+import com.trekko.api.utils.ResponseReason;
 
 import jakarta.validation.ConstraintViolationException;
 
@@ -49,5 +50,17 @@ public class GlobalExceptionHandler {
             final AccessDeniedException ex) {
         final var errorResponse = new ErrorResponseDTO(ResponseReason.FAILED_ACCESS_DENIED);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
+    @ExceptionHandler(JwtAuthException.class)
+    public ResponseEntity<ErrorResponseDTO> handleJwtAuthException(final JwtAuthException ex) {
+        final var errorResponse = new ErrorResponseDTO(ex.getReason());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDTO> handleException(final Exception ex) {
+        final var errorResponse = new ErrorResponseDTO(ResponseReason.FAILED_INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 }

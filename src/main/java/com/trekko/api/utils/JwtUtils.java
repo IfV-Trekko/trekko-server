@@ -4,6 +4,9 @@ import java.util.Date;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.trekko.api.exceptions.JwtAuthException;
 
 public final class JwtUtils {
     private static final long EXPIRATION_TIME = 864_000_00; // 1 day in milliseconds
@@ -25,8 +28,22 @@ public final class JwtUtils {
                     .build()
                     .verify(token);
             return true;
-        } catch (final Exception e) {
+        } catch (final Exception ex) {
             return false;
+        }
+    }
+
+    public static boolean validateToken(final String token) throws JwtAuthException {
+        try {
+            JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
+                    .build()
+                    .verify(token);
+            return true;
+        } catch (final TokenExpiredException ex) {
+            throw new JwtAuthException(ResponseReason.FAILED_TOKEN_EXPIRED);
+        } catch (final JWTVerificationException ex) {
+            throw new JwtAuthException(ResponseReason.FAILED_ACCESS_DENIED);
+
         }
     }
 

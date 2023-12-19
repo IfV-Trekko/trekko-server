@@ -1,6 +1,7 @@
 package com.trekko.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.trekko.api.config.ResponseReason;
 import com.trekko.api.dtos.ErrorResponseDTO;
 import com.trekko.api.dtos.SignInRequestDTO;
 import com.trekko.api.dtos.SignUpRequestDTO;
@@ -19,6 +19,7 @@ import com.trekko.api.dtos.SignUpResponseDTO;
 import com.trekko.api.models.User;
 import com.trekko.api.repositories.UserRepository;
 import com.trekko.api.utils.JwtUtils;
+import com.trekko.api.utils.ResponseReason;
 
 import jakarta.validation.Valid;
 
@@ -50,7 +51,7 @@ public class AuthController {
 
         final var signUpResponse = new SignUpResponseDTO();
 
-        return ResponseEntity.ok().body(signUpResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(signUpResponse);
     }
 
     @PostMapping("/signin")

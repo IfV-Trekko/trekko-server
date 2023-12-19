@@ -1,6 +1,6 @@
 package com.trekko.api.dtos;
 
-import com.trekko.api.config.ResponseReason;
+import com.trekko.api.utils.ResponseReason;
 
 public class ErrorResponseDTO {
     private ResponseReason reason;

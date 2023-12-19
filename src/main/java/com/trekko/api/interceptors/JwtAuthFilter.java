@@ -45,7 +45,7 @@ public class JwtAuthFilter extends GenericFilterBean {
             return;
         }
 
-        final Authentication auth = buildAuthenticatoin(user);
+        final Authentication auth = buildAuthentication(user);
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         filterChain.doFilter(req, res);
@@ -61,7 +61,7 @@ public class JwtAuthFilter extends GenericFilterBean {
         }
     }
 
-    private Authentication buildAuthenticatoin(final User user) {
+    private Authentication buildAuthentication(final User user) {
         final var userDetails = new CustomUserDetails(user);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }

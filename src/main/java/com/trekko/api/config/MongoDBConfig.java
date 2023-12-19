@@ -8,6 +8,7 @@ import com.mongodb.client.MongoClients;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
@@ -15,20 +16,24 @@ import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 @Configuration
 public class MongoDbConfig extends AbstractMongoClientConfiguration {
 
-    private static final String USER = "main";
-    private static final String PASSWORD = "uKHnG1airuZyHPGe";
     private static final String DATABASE = "trekko";
 
-    @Override
-    protected String getDatabaseName() {
-        return DATABASE;
-    }
+    @Value("${mongo.user:main}")
+    private String user;
+
+    @Value("${mongo.password:}")
+    private String password;
+
+    @Value("${mongo.host:trekko.3vwe8kl.mongodb.net}")
+    private String host;
+
+    @Value("${mongo.port:}")
+    private String port;
 
     @Override
     @Bean
     public MongoClient mongoClient() {
-        final ConnectionString connectionString = new ConnectionString(
-                "mongodb+srv://main:uKHnG1airuZyHPGe@trekko.3vwe8kl.mongodb.net/?retryWrites=true&w=majority"); // TODO
+        final var connectionString = new ConnectionString(this.buildConnectionString());
         final MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
                 .build();
@@ -38,6 +43,25 @@ public class MongoDbConfig extends AbstractMongoClientConfiguration {
 
     @Bean
     public Datastore datastore() {
-        return Morphia.createDatastore(mongoClient(), getDatabaseName());
+        return Morphia.createDatastore(this.mongoClient(), this.getDatabaseName());
+    }
+
+    @Override
+    protected String getDatabaseName() {
+        return DATABASE;
+    }
+
+    private String buildConnectionString() {
+        final StringBuilder connectionString = new StringBuilder("mongodb+srv://");
+        connectionString.append(user);
+        if (!password.isEmpty()) {
+            connectionString.append(":").append(password);
+        }
+        connectionString.append("@").append(host);
+        if (!port.isEmpty()) {
+            connectionString.append(":").append(port);
+        }
+        connectionString.append("/?retryWrites=true&w=majority");
+        return connectionString.toString();
     }
 }

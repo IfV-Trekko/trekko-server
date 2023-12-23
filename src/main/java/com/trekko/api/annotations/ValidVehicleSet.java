@@ -6,17 +6,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.trekko.api.validators.PasswordValidator;
+import com.trekko.api.validators.VehicleSetValidator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 @Documented
-@Constraint(validatedBy = PasswordValidator.class)
-@Target({ ElementType.FIELD, ElementType.PARAMETER })
+@Constraint(validatedBy = VehicleSetValidator.class)
+@Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidPassword {
-    String message() default "FAILED_INVALID_PASSWORD";
+public @interface ValidVehicleSet {
+    String message() default "FAILED_INVALID_VEHICLE_SET";
 
     Class<?>[] groups() default {};
 

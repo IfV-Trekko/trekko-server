@@ -8,6 +8,8 @@ import dev.morphia.annotations.Reference;
 
 import org.bson.types.ObjectId;
 
+import com.trekko.api.dtos.TripDto;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Date;
@@ -36,12 +38,12 @@ public class Trip {
     @Property("updatedAt")
     private Date updatedAt;
 
-    public Trip(final String uid, final long startTimestamp, final long endTimetamp, final long distance,
+    public Trip(final String uid, final long startTimestamp, final long endTimetamp, final double distance,
             final Set<Vehicle> vehicles, final User user) {
         this(uid, startTimestamp, endTimetamp, distance, vehicles, user, null, null);
     }
 
-    public Trip(final String uid, final long startTimestamp, final long endTimetamp, final long distance,
+    public Trip(final String uid, final long startTimestamp, final long endTimetamp, final double distance,
             final Set<Vehicle> vehicles, final User user, final String purpose, final String comment) {
         this.id = new ObjectId();
         this.uid = uid;
@@ -116,5 +118,10 @@ public class Trip {
     @Override
     public String toString() {
         return String.format("Trip[id=%s]", this.id);
+    }
+
+    public static Trip fromDto(final TripDto tripDto, final User user) {
+        return new Trip(tripDto.getUid(), tripDto.getStartTimestamp(), tripDto.getEndTimestamp(),
+                tripDto.getDistance(), tripDto.getVehicleSet(), user, tripDto.getPurpose(), tripDto.getComment());
     }
 }

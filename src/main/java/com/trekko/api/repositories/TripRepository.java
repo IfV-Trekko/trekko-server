@@ -3,6 +3,9 @@ package com.trekko.api.repositories;
 import dev.morphia.Datastore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
 import org.bson.types.ObjectId;
 
 import com.trekko.api.models.Trip;
@@ -19,6 +22,10 @@ public class TripRepository {
 
     public Trip saveTrip(final Trip trip) {
         return this.datastore.save(trip);
+    }
+
+    public void saveTrips(final List<Trip> trips) {
+        this.datastore.save(trips);
     }
 
     public Trip findTripById(final ObjectId id) {

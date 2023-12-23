@@ -41,6 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponseDTO> handleHttpMessageNotReadableException(
             final HttpMessageNotReadableException ex) {
+        System.out.println(ex.getMessage());
         final var errorResponse = new ErrorResponseDTO(ResponseReason.FAILED_REQUEST_BODY_EXPECTED);
         return ResponseEntity.badRequest().body(errorResponse);
     }

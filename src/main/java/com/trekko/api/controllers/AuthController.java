@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.trekko.api.dtos.ErrorResponseDTO;
 import com.trekko.api.dtos.SignInRequestDTO;
+import com.trekko.api.dtos.SignInResponseDTO;
 import com.trekko.api.dtos.SignUpRequestDTO;
 import com.trekko.api.dtos.SignUpResponseDTO;
 import com.trekko.api.models.User;
@@ -40,16 +41,17 @@ public class AuthController {
             final BindingResult bindingResult) {
         final String userEmail = signUpDTO.getEmail();
 
-        if (userRepository.existsByEmail(userEmail)) {
-            return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseReason.FAILED_ACCESS_DENIED));
-        }
+        if (userRepository.existsByEmail(userEmail))
+            return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseReason.FAILED_EMAIL_ALREADY_IN_USE));
 
         final String passwordHash = this.hashPassword(signUpDTO.getPassword());
 
         final var user = new User(userEmail, passwordHash);
         userRepository.saveUser(user);
 
-        final var signUpResponse = new SignUpResponseDTO();
+        final String token = JwtUtils.generateToken(user.getId().toString());
+
+        final var signUpResponse = new SignUpResponseDTO(token);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(signUpResponse);
     }
@@ -66,7 +68,15 @@ public class AuthController {
 
         final String token = JwtUtils.generateToken(user.getId().toString());
 
-        return ResponseEntity.ok().body("Success. Token: " + token);
+        final var signInResponse = new SignInResponseDTO(token);
+
+        return ResponseEntity.ok().body(signInResponse);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword() {
+        // TODO
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
     }
 
     private String hashPassword(final String plainPassword) {

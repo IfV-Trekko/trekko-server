@@ -1,10 +1,10 @@
 # Build stage
-FROM maven:3.8.2-jdk-17 AS build
+FROM maven:3-eclipse-temurin-17 AS build
 COPY . .
 RUN mvn clean package -DskipTests
 
 # Package stage
-FROM eclipse-temurin:21-jdk-alpine
+FROM eclipse-temurin:17-alpine
 VOLUME /tmp
 COPY --from=build /target/api-0.0.1-SNAPSHOT.jar api.jar
 # ENV PORT=8080

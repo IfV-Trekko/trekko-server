@@ -4,7 +4,7 @@ import com.trekko.api.annotations.ValidPassword;
 
 import jakarta.validation.constraints.Email;
 
-public class SignInRequestDTO {
+public class SignInRequestDto {
     @Email(message = "FAILED_INVALID_EMAIL")
     private String email;
     @ValidPassword(message = "FAILED_INVALID_PASSWORD")

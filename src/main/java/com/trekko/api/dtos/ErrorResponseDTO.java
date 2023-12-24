@@ -2,10 +2,10 @@ package com.trekko.api.dtos;
 
 import com.trekko.api.utils.ResponseReason;
 
-public class ErrorResponseDTO {
+public class ErrorResponseDto {
     private ResponseReason reason;
 
-    public ErrorResponseDTO(final ResponseReason reason) {
+    public ErrorResponseDto(final ResponseReason reason) {
         this.reason = reason;
     }
 

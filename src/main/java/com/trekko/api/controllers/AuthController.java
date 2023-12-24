@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.trekko.api.dtos.ErrorResponseDTO;
-import com.trekko.api.dtos.SignInRequestDTO;
-import com.trekko.api.dtos.SignInResponseDTO;
-import com.trekko.api.dtos.SignUpRequestDTO;
-import com.trekko.api.dtos.SignUpResponseDTO;
+import com.trekko.api.dtos.ErrorResponseDto;
+import com.trekko.api.dtos.SignInRequestDto;
+import com.trekko.api.dtos.SignInResponseDto;
+import com.trekko.api.dtos.SignUpRequestDto;
+import com.trekko.api.dtos.SignUpResponseDto;
 import com.trekko.api.models.User;
 import com.trekko.api.repositories.UserRepository;
 import com.trekko.api.utils.JwtUtils;
@@ -37,12 +37,12 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@Valid @RequestBody final SignUpRequestDTO signUpDTO,
+    public ResponseEntity<?> signUp(@Valid @RequestBody final SignUpRequestDto signUpDTO,
             final BindingResult bindingResult) {
         final String userEmail = signUpDTO.getEmail();
 
         if (userRepository.existsByEmail(userEmail))
-            return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseReason.FAILED_EMAIL_ALREADY_IN_USE));
+            return ResponseEntity.badRequest().body(new ErrorResponseDto(ResponseReason.FAILED_EMAIL_ALREADY_IN_USE));
 
         final String passwordHash = this.hashPassword(signUpDTO.getPassword());
 
@@ -51,24 +51,24 @@ public class AuthController {
 
         final String token = JwtUtils.generateToken(user.getId().toString());
 
-        final var signUpResponse = new SignUpResponseDTO(token);
+        final var signUpResponse = new SignUpResponseDto(token);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(signUpResponse);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@Valid @RequestBody final SignInRequestDTO signInDTO,
+    public ResponseEntity<?> signIn(@Valid @RequestBody final SignInRequestDto signInDTO,
             final BindingResult bindingResult) {
         final var user = userRepository.findUserByEmail(signInDTO.getEmail());
         if (user == null)
-            return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseReason.FAILED_USER_NOT_FOUND));
+            return ResponseEntity.badRequest().body(new ErrorResponseDto(ResponseReason.FAILED_USER_NOT_FOUND));
 
         if (!this.isPasswordValid(signInDTO.getPassword(), user.getPasswordHash()))
-            return ResponseEntity.badRequest().body(new ErrorResponseDTO(ResponseReason.FAILED_INVALID_CREDENTIALS));
+            return ResponseEntity.badRequest().body(new ErrorResponseDto(ResponseReason.FAILED_INVALID_CREDENTIALS));
 
         final String token = JwtUtils.generateToken(user.getId().toString());
 
-        final var signInResponse = new SignInResponseDTO(token);
+        final var signInResponse = new SignInResponseDto(token);
 
         return ResponseEntity.ok().body(signInResponse);
     }

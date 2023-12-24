@@ -9,6 +9,7 @@ import java.util.List;
 import org.bson.types.ObjectId;
 
 import com.trekko.api.models.Trip;
+import com.trekko.api.models.User;
 
 @Repository
 public class TripRepository {
@@ -31,6 +32,21 @@ public class TripRepository {
     public Trip findTripById(final ObjectId id) {
         return this.datastore.find(Trip.class).stream().filter(trip -> trip.getId().equals(id)).findFirst()
                 .orElse(null);
+    }
+
+    public Trip findTripByUid(final String uid, final User user) {
+        return this.datastore.find(Trip.class).stream()
+                .filter(trip -> trip.getUid().equals(uid) && trip.getUser().getId().equals(user.getId())).findFirst()
+                .orElse(null);
+    }
+
+    public boolean existsByUid(final String uid, final User user) {
+        return this.datastore.find(Trip.class).stream()
+                .anyMatch(trip -> trip.getUid().equals(uid) && trip.getUser().getId().equals(user.getId()));
+    }
+
+    public void deleteTrip(final Trip trip) {
+        this.datastore.delete(trip);
     }
 
     public Trip getFirst() {

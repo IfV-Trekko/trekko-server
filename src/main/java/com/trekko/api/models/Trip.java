@@ -38,6 +38,10 @@ public class Trip {
     @Property("updatedAt")
     private Date updatedAt;
 
+    public Trip() {
+        this(null, 0, 0, 0, new HashSet<>(), null);
+    }
+
     public Trip(final String uid, final long startTimestamp, final long endTimetamp, final double distance,
             final Set<Vehicle> vehicles, final User user) {
         this(uid, startTimestamp, endTimetamp, distance, vehicles, user, null, null);

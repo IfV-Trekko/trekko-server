@@ -6,9 +6,12 @@ import java.util.Set;
 
 import org.bson.types.ObjectId;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.trekko.api.models.Trip;
+import com.trekko.api.utils.ObjectIdSerializer;
 
 public class RichTripDto extends TripDto {
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId id;
     private Date createdAt;
     private Date updatedAt;

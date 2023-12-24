@@ -8,7 +8,9 @@ import dev.morphia.annotations.Reference;
 
 import org.bson.types.ObjectId;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.trekko.api.dtos.TripDto;
+import com.trekko.api.utils.ObjectIdSerializer;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +20,7 @@ import java.util.Date;
 public class Trip {
 
     @Id
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private final ObjectId id;
     private final String uid;
 

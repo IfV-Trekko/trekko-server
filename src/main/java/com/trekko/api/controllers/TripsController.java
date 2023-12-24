@@ -40,13 +40,10 @@ public class TripsController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public String getTrips() {
+    public ResponseEntity<?> getTrips() {
         final var user = AuthUtils.getUserFromContext();
-        System.out.println(user);
-        // var user = this.userRepository.findUserByEmail("email@example.com");
-
-        // return user.getEmail();
-        return user.getEmail();
+        final var trips = this.tripRepository.getTripsByUser(user);
+        return ResponseEntity.ok(trips.stream().map(RichTripDto::from).collect(Collectors.toList()));
     }
 
     @PreAuthorize("isAuthenticated()")

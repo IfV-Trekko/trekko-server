@@ -3,6 +3,7 @@ package com.trekko.api.dtos;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.trekko.api.annotations.ValidVehicleSet;
 import com.trekko.api.models.Trip;
 import com.trekko.api.models.Vehicle;
@@ -69,6 +70,7 @@ public class TripDto {
         return this.vehicles;
     }
 
+    @JsonIgnore
     public Set<Vehicle> getVehicleSet() {
         final var vehicles = new HashSet<Vehicle>();
 

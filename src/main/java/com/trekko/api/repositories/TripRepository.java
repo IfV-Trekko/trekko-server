@@ -14,6 +14,8 @@ import com.trekko.api.models.User;
 @Repository
 public class TripRepository {
 
+    private static final long DEFAULT_FETCH_LIMIT = 50;
+
     private final Datastore datastore;
 
     @Autowired
@@ -32,6 +34,11 @@ public class TripRepository {
     public Trip findTripById(final ObjectId id) {
         return this.datastore.find(Trip.class).stream().filter(trip -> trip.getId().equals(id)).findFirst()
                 .orElse(null);
+    }
+
+    public List<Trip> getTripsByUser(final User user) {
+        return this.datastore.find(Trip.class).stream().filter(trip -> trip.getUser().getId().equals(user.getId()))
+                .limit(DEFAULT_FETCH_LIMIT).toList();
     }
 
     public Trip findTripByUid(final String uid, final User user) {

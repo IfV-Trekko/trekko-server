@@ -4,6 +4,9 @@ import java.util.Date;
 
 import org.bson.types.ObjectId;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.trekko.api.utils.ObjectIdSerializer;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
@@ -13,19 +16,16 @@ import dev.morphia.annotations.Property;
 public class User {
 
     @Id
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private final ObjectId id;
     private final String email;
     private final String passwordHash;
-
-    // @Reference
-    // private final List<Trip> trips = new ArrayList<>();
 
     @Property("createdAt")
     private Date createdAt;
     @Property("updatedAt")
     private Date updatedAt;
 
-    // TODO: why is this needed?
     public User() {
         this.id = new ObjectId();
         this.email = null;

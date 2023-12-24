@@ -7,6 +7,6 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:17-alpine
 VOLUME /tmp
 COPY --from=build /target/api-0.0.1-SNAPSHOT.jar api.jar
-# ENV PORT=8080
+ENV PORT=8080
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/api.jar"]

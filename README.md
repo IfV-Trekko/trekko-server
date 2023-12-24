@@ -4,11 +4,23 @@
 
 # Overview
 
-All production-grade endpoints are accessed from `TODO.example.com`. Unless explicitly stated otherwise, data exchange occurs in JSON format.
+All production-grade endpoints are accessed from a single project server deployment url. Unless explicitly stated otherwise, data exchange occurs in JSON format.
 
 ```
-https://TODO.example.com
+https://trekko-server.onrender.com
 ```
+
+## Bearer Access Tokens
+
+For secure access to most endpoints, authentication is required using bearer access tokens retrieved on sign in. Simply include the token in the header as follows:
+
+```
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NTc4YTBlOWUyYzQ3YTE0YzkyODNjOTgiLCJleHAiOjE3MDI0OTEwMTV9.8rp-64KxkzfPGkTE6F_bxAU3ZlSIutPYytKcAyYFQLpTvbfJHWssTSQI8MS_MzB_uv6O-8t05KfgDeldQKJu3w
+```
+
+## Rate Limit
+
+TODO
 
 # Auth
 
@@ -82,10 +94,10 @@ Status: 200 Status
 
 # Trips
 
-## Add/Donate a trip
+## Add/Donate trips
 
 ```php
-POST /trips
+POST /trips/batch
 ```
 
 <details open>
@@ -98,11 +110,14 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NTc4YTBlO
 ```
 
 ```json
-{
-  "uid": "bbG8a0c8283c98e9e2c47a14",
-  "startTimestamp": 648294722,
+[
+  {
+    "uid": "bbG8a0c8283c98e9e2c47a14",
+    "startTimestamp": 648294722,
+    ...
+  },
   ...
-}
+]
 ```
 
 #### Response
@@ -112,12 +127,15 @@ Status: 201 Created
 ```
 
 ```json
-{
-  "id": "6578a0e9e2c47a14c8283c98",
-  "uid": "bbG8a0c8283c98e9e2c47a14",
-  "startTimestamp": 648294722,
+[
+  {
+    "id": "6578a0e9e2c47a14c8283c98",
+    "uid": "bbG8a0c8283c98e9e2c47a14",
+    "startTimestamp": 648294722,
+    ...
+  },
   ...
-}
+]
 ```
 
 </details>
@@ -128,7 +146,7 @@ Status: 201 Created
 GET /trips/{uid}
 ```
 
-- `uid`: The local user's locally generated trip id
+- `uid`: The user's locally generated trip id
 
 <details open>
 <summary>References</summary>
@@ -158,11 +176,13 @@ Status: 200 Success
 
 ## Update a trip
 
+Update the trip resource identified by `{uid}` by submitting a PUT request with the updated record.
+
 ```php
 PUT /trips/{uid}
 ```
 
-- `uid`: The local user's locally generated trip id
+- `uid`: The user's locally generated trip id
 
 <details open>
 <summary>References</summary>
@@ -171,6 +191,14 @@ PUT /trips/{uid}
 
 ```
 Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NTc4YTBlOWUyYzQ3YTE0YzkyODNjOTgiLCJleHAiOjE3MDI0OTEwMTV9.8rp-64KxkzfPGkTE6F_bxAU3ZlSIutPYytKcAyYFQLpTvbfJHWssTSQI8MS_MzB_uv6O-8t05KfgDeldQKJu3w
+```
+
+```json
+{
+  "uid": "bbG8a0c8283c98e9e2c47a14",
+  "startTimestamp": 648294722,
+  ...
+}
 ```
 
 #### Response
@@ -186,6 +214,31 @@ Status: 200 Success
   "startTimestamp": 648294722,
   ...
 }
+```
+
+</details>
+
+## Delete a trip
+
+```php
+DELETE /trips/{uid}
+```
+
+- `uid`: The user's locally generated trip id
+
+<details open>
+<summary>References</summary>
+
+#### Request
+
+```
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NTc4YTBlOWUyYzQ3YTE0YzkyODNjOTgiLCJleHAiOjE3MDI0OTEwMTV9.8rp-64KxkzfPGkTE6F_bxAU3ZlSIutPYytKcAyYFQLpTvbfJHWssTSQI8MS_MzB_uv6O-8t05KfgDeldQKJu3w
+```
+
+#### Response
+
+```
+Status: 204 No Content
 ```
 
 </details>

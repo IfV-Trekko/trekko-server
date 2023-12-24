@@ -119,6 +119,15 @@ public class Trip {
         this.updatedAt = now;
     }
 
+    public void updateFromDto(final TripDto tripDto) {
+        this.startTimestamp = tripDto.getStartTimestamp();
+        this.endTimetamp = tripDto.getEndTimestamp();
+        this.distance = tripDto.getDistance();
+        this.vehicles = tripDto.getVehicleSet();
+        this.purpose = tripDto.getPurpose();
+        this.comment = tripDto.getComment();
+    }
+
     @Override
     public String toString() {
         return String.format("Trip[id=%s]", this.id);

@@ -37,14 +37,14 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@Valid @RequestBody final SignUpRequestDto signUpDTO,
+    public ResponseEntity<?> signUp(@Valid @RequestBody final SignUpRequestDto signUpDto,
             final BindingResult bindingResult) {
-        final String userEmail = signUpDTO.getEmail();
+        final String userEmail = signUpDto.getEmail();
 
         if (userRepository.existsByEmail(userEmail))
             return ResponseEntity.badRequest().body(new ErrorResponseDto(ResponseReason.FAILED_EMAIL_ALREADY_IN_USE));
 
-        final String passwordHash = this.hashPassword(signUpDTO.getPassword());
+        final String passwordHash = this.hashPassword(signUpDto.getPassword());
 
         final var user = new User(userEmail, passwordHash);
         userRepository.saveUser(user);
@@ -57,13 +57,13 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@Valid @RequestBody final SignInRequestDto signInDTO,
+    public ResponseEntity<?> signIn(@Valid @RequestBody final SignInRequestDto signInDto,
             final BindingResult bindingResult) {
-        final var user = userRepository.findUserByEmail(signInDTO.getEmail());
+        final var user = userRepository.findUserByEmail(signInDto.getEmail());
         if (user == null)
             return ResponseEntity.badRequest().body(new ErrorResponseDto(ResponseReason.FAILED_USER_NOT_FOUND));
 
-        if (!this.isPasswordValid(signInDTO.getPassword(), user.getPasswordHash()))
+        if (!this.isPasswordValid(signInDto.getPassword(), user.getPasswordHash()))
             return ResponseEntity.badRequest().body(new ErrorResponseDto(ResponseReason.FAILED_INVALID_CREDENTIALS));
 
         final String token = JwtUtils.generateToken(user.getId().toString());

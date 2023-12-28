@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.bson.types.ObjectId;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.trekko.api.utils.ObjectIdSerializer;
 
@@ -19,7 +20,10 @@ public class User {
     @JsonSerialize(using = ObjectIdSerializer.class)
     private final ObjectId id;
     private final String email;
+    @JsonIgnore
     private final String passwordHash;
+
+    private String profile;
 
     @Property("createdAt")
     private Date createdAt;
@@ -50,14 +54,13 @@ public class User {
         return this.passwordHash;
     }
 
-    // public List<Trip> getTrips() {
-    // return this.trips;
-    // }
+    public String getProfile() {
+        return this.profile;
+    }
 
-    // public void addTrip(final Trip trip) {
-    // this.trips.add(trip);
-    // trip.setUser(this);
-    // }
+    public void setProfile(final String profile) {
+        this.profile = profile;
+    }
 
     @PrePersist
     protected void prePersist() {

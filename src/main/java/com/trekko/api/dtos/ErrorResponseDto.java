@@ -10,6 +10,10 @@ public class ErrorResponseDto {
     }
 
     public String getReason() {
-        return this.reason.toString();
+        return this.reason.getMessage();
+    }
+
+    public int getReasonCode() {
+        return this.reason.getCode();
     }
 }

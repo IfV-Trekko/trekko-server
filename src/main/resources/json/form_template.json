@@ -1,0 +1,37 @@
+{
+  "$schema": "./form_template.schema.json",
+  "fields": [
+    {
+      "title": "Home Office",
+      "key": "homeOffice",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "title": "Geschlecht",
+      "key": "gender",
+      "type": "select",
+      "required": true,
+      "options": [
+        {
+          "title": "Männlich",
+          "key": "male"
+        },
+        {
+          "title": "Weiblich",
+          "key": "female"
+        },
+        {
+          "title": "Divers",
+          "key": "divers"
+        }
+      ]
+    },
+    {
+      "title": "Alter",
+      "key": "age",
+      "type": "number",
+      "required": true
+    }
+  ]
+}

@@ -3,9 +3,6 @@ package com.trekko.api.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +16,7 @@ import com.trekko.api.dtos.SignUpRequestDto;
 import com.trekko.api.dtos.SignUpResponseDto;
 import com.trekko.api.models.User;
 import com.trekko.api.repositories.UserRepository;
+import com.trekko.api.utils.AuthUtils;
 import com.trekko.api.utils.JwtUtils;
 import com.trekko.api.utils.ResponseReason;
 
@@ -37,39 +35,37 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@Valid @RequestBody final SignUpRequestDto signUpDto,
-            final BindingResult bindingResult) {
+    public ResponseEntity<?> signUp(@Valid @RequestBody final SignUpRequestDto signUpDto) {
         final String userEmail = signUpDto.getEmail();
 
         if (userRepository.existsByEmail(userEmail))
             return ResponseEntity.badRequest().body(new ErrorResponseDto(ResponseReason.FAILED_EMAIL_ALREADY_IN_USE));
 
-        final String passwordHash = this.hashPassword(signUpDto.getPassword());
+        final String passwordHash = AuthUtils.hashPassword(signUpDto.getPassword());
+        final String confirmationCode = AuthUtils.generateEmailConfirmationCode();
 
         final var user = new User(userEmail, passwordHash);
+        user.setEmailConfirmationCode(confirmationCode);
         userRepository.saveUser(user);
 
         final String token = JwtUtils.generateToken(user.getId().toString());
 
         final var signUpResponse = new SignUpResponseDto(token);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(signUpResponse);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@Valid @RequestBody final SignInRequestDto signInDto,
-            final BindingResult bindingResult) {
+    public ResponseEntity<?> signIn(@Valid @RequestBody final SignInRequestDto signInDto) {
         final var user = userRepository.findUserByEmail(signInDto.getEmail());
         if (user == null)
             return ResponseEntity.badRequest().body(new ErrorResponseDto(ResponseReason.FAILED_USER_NOT_FOUND));
 
-        if (!this.isPasswordValid(signInDto.getPassword(), user.getPasswordHash()))
+        if (!AuthUtils.isPasswordValid(signInDto.getPassword(), user.getPasswordHash()))
             return ResponseEntity.badRequest().body(new ErrorResponseDto(ResponseReason.FAILED_INVALID_CREDENTIALS));
 
         final String token = JwtUtils.generateToken(user.getId().toString());
 
         final var signInResponse = new SignInResponseDto(token);
-
         return ResponseEntity.ok().body(signInResponse);
     }
 
@@ -77,14 +73,5 @@ public class AuthController {
     public ResponseEntity<?> forgotPassword() {
         // TODO
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
-    }
-
-    private String hashPassword(final String plainPassword) {
-        final var passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder.encode(plainPassword);
-    }
-
-    private boolean isPasswordValid(final String plainPassword, final String passwordHash) {
-        return BCrypt.checkpw(plainPassword, passwordHash);
     }
 }

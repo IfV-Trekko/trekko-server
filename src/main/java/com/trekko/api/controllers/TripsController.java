@@ -65,7 +65,7 @@ public class TripsController {
 
         // check if any of the trips already exist
         for (final var tripDto : tripDtos) {
-            if (this.tripRepository.existsByUid(tripDto.getUid(), user)) {
+            if (this.tripRepository.existsTripByUid(tripDto.getUid(), user)) {
                 final var errorResponse = new ErrorResponseDto(ResponseReason.FAILED_RESOURCE_CONFLICT);
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
             }

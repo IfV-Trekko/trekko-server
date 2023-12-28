@@ -20,8 +20,10 @@ public class User {
     @JsonSerialize(using = ObjectIdSerializer.class)
     private final ObjectId id;
     private final String email;
-    @JsonIgnore
     private final String passwordHash;
+
+    private String emailConfirmationCode;
+    private boolean emailConfirmed = false;
 
     private String profile;
 
@@ -50,16 +52,42 @@ public class User {
         return this.email;
     }
 
+    @JsonIgnore
     public String getPasswordHash() {
         return this.passwordHash;
+    }
+
+    @JsonIgnore
+    public String getEmailConfirmationCode() {
+        return this.emailConfirmationCode;
+    }
+
+    public boolean isEmailConfirmed() {
+        return this.emailConfirmed;
     }
 
     public String getProfile() {
         return this.profile;
     }
 
+    public Date getCreatedAt() {
+        return this.createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return this.updatedAt;
+    }
+
     public void setProfile(final String profile) {
         this.profile = profile;
+    }
+
+    public void setEmailConfirmationCode(final String emailConfirmationCode) {
+        this.emailConfirmationCode = emailConfirmationCode;
+    }
+
+    public void setEmailConfirmed(final boolean emailConfirmed) {
+        this.emailConfirmed = emailConfirmed;
     }
 
     @PrePersist

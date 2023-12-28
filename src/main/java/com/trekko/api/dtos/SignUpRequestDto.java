@@ -11,10 +11,10 @@ public class SignUpRequestDto {
     private String password;
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 }

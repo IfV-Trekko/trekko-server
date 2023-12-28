@@ -23,8 +23,8 @@ public class TripRepository {
         this.datastore = datastore;
     }
 
-    public Trip saveTrip(final Trip trip) {
-        return this.datastore.save(trip);
+    public void saveTrip(final Trip trip) {
+        this.datastore.save(trip);
     }
 
     public void saveTrips(final List<Trip> trips) {
@@ -36,18 +36,18 @@ public class TripRepository {
                 .orElse(null);
     }
 
-    public List<Trip> getTripsByUser(final User user) {
-        return this.datastore.find(Trip.class).stream().filter(trip -> trip.getUser().getId().equals(user.getId()))
-                .limit(DEFAULT_FETCH_LIMIT).toList();
-    }
-
     public Trip findTripByUid(final String uid, final User user) {
         return this.datastore.find(Trip.class).stream()
                 .filter(trip -> trip.getUid().equals(uid) && trip.getUser().getId().equals(user.getId())).findFirst()
                 .orElse(null);
     }
 
-    public boolean existsByUid(final String uid, final User user) {
+    public List<Trip> getTripsByUser(final User user) {
+        return this.datastore.find(Trip.class).stream().filter(trip -> trip.getUser().getId().equals(user.getId()))
+                .limit(DEFAULT_FETCH_LIMIT).toList();
+    }
+
+    public boolean existsTripByUid(final String uid, final User user) {
         return this.datastore.find(Trip.class).stream()
                 .anyMatch(trip -> trip.getUid().equals(uid) && trip.getUser().getId().equals(user.getId()));
     }

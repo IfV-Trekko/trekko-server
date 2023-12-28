@@ -8,6 +8,6 @@ public class SignInResponseDto {
     }
 
     public String getToken() {
-        return token;
+        return this.token;
     }
 }

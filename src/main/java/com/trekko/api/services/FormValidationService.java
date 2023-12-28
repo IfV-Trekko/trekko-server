@@ -46,7 +46,7 @@ public class FormValidationService {
         return true;
     }
 
-    private boolean isFieldValueValid(Form.FormField templateField, JsonNode fieldValue) {
+    private boolean isFieldValueValid(final Form.FormField templateField, final JsonNode fieldValue) {
         if (fieldValue == null || fieldValue.isNull()) {
             return !templateField.isRequired();
         }

@@ -22,13 +22,49 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NTc4YTBlO
 
 TODO
 
+## Error handling
+
+Errors can occur for a variety of reasons, but the most common ones are specifically targetted and forwared accordingly. An error response will be marked with a meaningful [https://developer.mozilla.org/en-US/docs/Web/HTTP/Status](HTTP Status Code) and a human/machine-readable reason identifier. E.g.:
+
+##### `FAILED_ACCESS_DENIED`
+
+Authentication failed due to invalid or missing credentials.
+
+```
+Status: 403 Forbidden
+```
+
+```json
+{
+  "reason": "FAILED_ACCESS_DENIED",
+  "reasonCode": 18 // Identification by code is not reliable and might change for now
+}
+```
+
+##### `INTERNAL_SERVER_ERROR`
+
+Error got not specifically catched.
+
+```
+Status: 501 Internal Server Error
+```
+
+```json
+{
+  "reason": "FAILED_INTERNAL_SERVER_ERROR",
+  "reasonCode": 21
+}
+```
+
+All response reasons can be found inside `ResponseReason.java`.
+
 # Auth
 
 ## Sign up a user
 
 ![POST](https://img.shields.io/badge/POST-blue)
 
-Register a new user account using an email and password.
+Register a new user account using an email and password. This will include sending a confirmation email to the registrar email address.
 
 ```php
 POST /auth/signup
@@ -96,6 +132,39 @@ Status: 200 Status
 {
   "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NTc4YTBlOWUyYzQ3YTE0YzkyODNjOTgiLCJleHAiOjE3MDI0OTEwMTV9.8rp-64KxkzfPGkTE6F_bxAU3ZlSIutPYytKcAyYFQLpTvbfJHWssTSQI8MS_MzB_uv6O-8t05KfgDeldQKJu3w"
 }
+```
+
+</details>
+
+# Account
+
+## Confirm email
+
+![POST](https://img.shields.io/badge/POST-blue) ![Auth required](https://img.shields.io/badge/Auth%20required-8A2BE2)
+
+Posting a valid account email confirmation code here will activate the user's account.
+
+```php
+POST /account/email/confirmation
+```
+
+<details>
+<summary>References</summary>
+
+#### Request
+
+```json
+{
+  "code": 12345
+}
+```
+
+#### Response
+
+##### `OK`
+
+```
+Status: 200 Status
 ```
 
 </details>
@@ -255,7 +324,6 @@ Status: 204 No Content
 
 </details>
 
-
 # Profile
 
 A user's profile represents its filled out onboarding project form.
@@ -310,7 +378,6 @@ GET /profile
   "gender": "female",
   "age": 21
 }
-
 ```
 
 #### Response
@@ -336,8 +403,6 @@ Status: 401 Bad Request
 ```
 
 </details>
-
-
 
 # Form
 
@@ -402,7 +467,6 @@ Status: 200 Success
     }
   ]
 }
-
 ```
 
 </details>

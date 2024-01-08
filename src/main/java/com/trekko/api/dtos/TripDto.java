@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.trekko.api.annotations.ValidVehicleSet;
+import com.trekko.api.annotations.ValidTransportTypeSet;
 import com.trekko.api.models.Trip;
-import com.trekko.api.models.Vehicle;
+import com.trekko.api.models.TransportType;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -23,8 +23,8 @@ public class TripDto {
     @Positive
     private double distance;
 
-    @ValidVehicleSet
-    private Set<String> vehicles;
+    @ValidTransportTypeSet
+    private Set<String> transportTypes;
 
     @Size(max = 255)
     private String purpose;
@@ -35,17 +35,17 @@ public class TripDto {
     }
 
     public TripDto(final String uid, final long startTimestamp, final long endTimestamp, final double distance,
-            final Set<String> vehicles) {
-        this(uid, startTimestamp, endTimestamp, distance, vehicles, null, null);
+            final Set<String> transportTypes) {
+        this(uid, startTimestamp, endTimestamp, distance, transportTypes, null, null);
     }
 
     public TripDto(final String uid, final long startTimestamp, final long endTimestamp, final double distance,
-            final Set<String> vehicles, final String purpose, final String comment) {
+            final Set<String> transportTypes, final String purpose, final String comment) {
         this.uid = uid;
         this.startTimestamp = startTimestamp;
         this.endTimestamp = endTimestamp;
         this.distance = distance;
-        this.vehicles = vehicles;
+        this.transportTypes = transportTypes;
         this.purpose = purpose;
         this.comment = comment;
     }
@@ -66,19 +66,19 @@ public class TripDto {
         return this.distance;
     }
 
-    public Set<String> getVehicles() {
-        return this.vehicles;
+    public Set<String> getTransportTypes() {
+        return this.transportTypes;
     }
 
     @JsonIgnore
-    public Set<Vehicle> getVehicleSet() {
-        final var vehicles = new HashSet<Vehicle>();
+    public Set<TransportType> getTransportTypeSet() {
+        final var transportTypes = new HashSet<TransportType>();
 
-        for (final var vehicle : this.vehicles) {
-            vehicles.add(Vehicle.from(vehicle));
+        for (final var transportType : this.transportTypes) {
+            transportTypes.add(TransportType.from(transportType));
         }
 
-        return vehicles;
+        return transportTypes;
     }
 
     public String getPurpose() {
@@ -90,13 +90,13 @@ public class TripDto {
     }
 
     public static TripDto from(final Trip trip) {
-        final var vehicles = new HashSet<String>();
+        final var transportTypes = new HashSet<String>();
 
-        for (final var vehicle : trip.getVehicles()) {
-            vehicles.add(vehicle.toString());
+        for (final var transportType : trip.getTransportTypes()) {
+            transportTypes.add(transportType.toString());
         }
 
         return new TripDto(trip.getUid(), trip.getStartTimestamp(), trip.getEndTimetamp(), trip.getDistance(),
-                vehicles, trip.getPurpose(), trip.getComment());
+                transportTypes, trip.getPurpose(), trip.getComment());
     }
 }

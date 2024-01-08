@@ -17,9 +17,9 @@ public class RichTripDto extends TripDto {
     private Date updatedAt;
 
     public RichTripDto(final ObjectId id, final String uid, final long startTimestamp, final long endTimestamp,
-            final double distance, final Set<String> vehicles, final String purpose, final String comment,
+            final double distance, final Set<String> transportTypes, final String purpose, final String comment,
             final Date createdAt, final Date updatedAt) {
-        super(uid, startTimestamp, endTimestamp, distance, vehicles, purpose, comment);
+        super(uid, startTimestamp, endTimestamp, distance, transportTypes, purpose, comment);
 
         this.id = id;
         this.createdAt = createdAt;
@@ -39,14 +39,14 @@ public class RichTripDto extends TripDto {
     }
 
     public static RichTripDto from(final Trip trip) {
-        final var vehicles = new HashSet<String>();
+        final var transportTypes = new HashSet<String>();
 
-        for (final var vehicle : trip.getVehicles()) {
-            vehicles.add(vehicle.toString());
+        for (final var transportType : trip.getTransportTypes()) {
+            transportTypes.add(transportType.toString());
         }
 
         return new RichTripDto(trip.getId(), trip.getUid(), trip.getStartTimestamp(), trip.getEndTimetamp(),
                 trip.getDistance(),
-                vehicles, trip.getPurpose(), trip.getComment(), trip.getCreatedAt(), trip.getUpdatedAt());
+                transportTypes, trip.getPurpose(), trip.getComment(), trip.getCreatedAt(), trip.getUpdatedAt());
     }
 }

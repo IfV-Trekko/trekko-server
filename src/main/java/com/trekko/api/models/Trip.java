@@ -28,8 +28,8 @@ public class Trip {
     private long endTimetamp;
     private double distance;
 
-    @Property("vehicles")
-    private Set<Vehicle> vehicles = new HashSet<>();
+    @Property("transportTypes")
+    private Set<TransportType> transportTypes = new HashSet<>();
     private String purpose;
     private String comment;
 
@@ -46,18 +46,18 @@ public class Trip {
     }
 
     public Trip(final String uid, final long startTimestamp, final long endTimetamp, final double distance,
-            final Set<Vehicle> vehicles, final User user) {
-        this(uid, startTimestamp, endTimetamp, distance, vehicles, user, null, null);
+            final Set<TransportType> transportTypes, final User user) {
+        this(uid, startTimestamp, endTimetamp, distance, transportTypes, user, null, null);
     }
 
     public Trip(final String uid, final long startTimestamp, final long endTimetamp, final double distance,
-            final Set<Vehicle> vehicles, final User user, final String purpose, final String comment) {
+            final Set<TransportType> transportTypes, final User user, final String purpose, final String comment) {
         this.id = new ObjectId();
         this.uid = uid;
         this.startTimestamp = startTimestamp;
         this.endTimetamp = endTimetamp;
         this.distance = distance;
-        this.vehicles = vehicles;
+        this.transportTypes = transportTypes;
         this.user = user;
         this.purpose = purpose;
         this.comment = comment;
@@ -83,8 +83,8 @@ public class Trip {
         return this.distance;
     }
 
-    public Set<Vehicle> getVehicles() {
-        return this.vehicles;
+    public Set<TransportType> getTransportTypes() {
+        return this.transportTypes;
     }
 
     public User getUser() {
@@ -126,7 +126,7 @@ public class Trip {
         this.startTimestamp = tripDto.getStartTimestamp();
         this.endTimetamp = tripDto.getEndTimestamp();
         this.distance = tripDto.getDistance();
-        this.vehicles = tripDto.getVehicleSet();
+        this.transportTypes = tripDto.getTransportTypeSet();
         this.purpose = tripDto.getPurpose();
         this.comment = tripDto.getComment();
     }
@@ -138,6 +138,6 @@ public class Trip {
 
     public static Trip fromDto(final TripDto tripDto, final User user) {
         return new Trip(tripDto.getUid(), tripDto.getStartTimestamp(), tripDto.getEndTimestamp(),
-                tripDto.getDistance(), tripDto.getVehicleSet(), user, tripDto.getPurpose(), tripDto.getComment());
+                tripDto.getDistance(), tripDto.getTransportTypeSet(), user, tripDto.getPurpose(), tripDto.getComment());
     }
 }

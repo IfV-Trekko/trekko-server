@@ -6,17 +6,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.trekko.api.validators.VehicleSetValidator;
+import com.trekko.api.validators.TransportTypeSetValidator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 @Documented
-@Constraint(validatedBy = VehicleSetValidator.class)
+@Constraint(validatedBy = TransportTypeSetValidator.class)
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidVehicleSet {
-    String message() default "FAILED_INVALID_VEHICLE_SET";
+public @interface ValidTransportTypeSet {
+    String message() default "FAILED_INVALID_TRANSPORT_TYPE_SET";
 
     Class<?>[] groups() default {};
 

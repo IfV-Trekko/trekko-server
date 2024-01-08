@@ -211,7 +211,7 @@ Status: 201 Created
     "startTimestamp": 1703759287970,
     "endTimestamp": 1703759287972,
     "distance": 40,
-    "vehicles": ["CAR"],
+    "transportTypes": ["CAR"],
     "purpose": "Freizeit",
     "comment": null
   },

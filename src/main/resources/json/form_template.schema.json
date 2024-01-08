@@ -33,6 +33,9 @@
               "additionalProperties": false
             }
           },
+          "regex": {
+            "type": "string"
+          },
           "required": {
             "type": "boolean"
           }

@@ -44,10 +44,14 @@ public class AccountController {
         if (user == null)
             return ResponseEntity.notFound().build();
 
+        if (user.isEmailConfirmed())
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+
         if (!user.getEmailConfirmationCode().equals(code))
             return ResponseEntity.badRequest().build();
 
         user.setEmailConfirmed(true);
+        user.setEmailConfirmationCode(null);
         userRepository.saveUser(user);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

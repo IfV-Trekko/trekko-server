@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.trekko.api.dtos.RichTripDto;
 import com.trekko.api.dtos.TripDto;
 import com.trekko.api.repositories.TripRepository;
-import com.trekko.api.repositories.UserRepository;
 import com.trekko.api.utils.AuthUtils;
 
 import jakarta.validation.Valid;
@@ -25,12 +24,10 @@ import jakarta.validation.Valid;
 public class TripController {
 
     private final TripRepository tripRepository;
-    private final UserRepository userRepository;
 
     @Autowired
-    public TripController(final TripRepository tripRepository, final UserRepository userRepository) {
+    public TripController(final TripRepository tripRepository) {
         this.tripRepository = tripRepository;
-        this.userRepository = userRepository;
     }
 
     @PreAuthorize("isAuthenticated()")

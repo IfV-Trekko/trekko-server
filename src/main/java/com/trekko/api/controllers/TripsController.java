@@ -19,7 +19,6 @@ import com.trekko.api.dtos.RichTripDto;
 import com.trekko.api.dtos.TripDto;
 import com.trekko.api.models.Trip;
 import com.trekko.api.repositories.TripRepository;
-import com.trekko.api.repositories.UserRepository;
 import com.trekko.api.utils.AuthUtils;
 import com.trekko.api.utils.ResponseReason;
 
@@ -30,12 +29,10 @@ import jakarta.validation.Valid;
 public class TripsController {
 
     private final TripRepository tripRepository;
-    private final UserRepository userRepository;
 
     @Autowired
-    public TripsController(final TripRepository tripRepository, final UserRepository userRepository) {
+    public TripsController(final TripRepository tripRepository) {
         this.tripRepository = tripRepository;
-        this.userRepository = userRepository;
     }
 
     @PreAuthorize("isAuthenticated()")

@@ -29,12 +29,9 @@ public class AuthConfig {
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
-                // .authorizeHttpRequests((authz) -> authz
-                // .anyRequest().permitAll())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtAuthFilter(this.userRepository), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(handler -> handler.disable())
-                // .httpBasic(Customizer.withDefaults())
                 .build();
     }
 }

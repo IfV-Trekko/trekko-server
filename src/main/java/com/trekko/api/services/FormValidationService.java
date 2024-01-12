@@ -76,5 +76,4 @@ public class FormValidationService {
 
         return !submittedFieldKeys.equals(templateFieldKeys);
     }
-
 }

@@ -14,6 +14,7 @@
 	<name>api</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
+		<java.version>21</java.version>
 		<mongodb-driver-sync.version>4.5.1</mongodb-driver-sync.version>
     <morphia-core.version>2.2.6</morphia-core.version>
 	</properties>
@@ -67,6 +68,13 @@
 			<artifactId>java-jwt</artifactId>
 			<version>4.4.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.github.vladimir-bukhtoyarov</groupId>
+			<artifactId>bucket4j-core</artifactId>
+			<version>7.6.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

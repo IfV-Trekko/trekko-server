@@ -1,9 +1,12 @@
 package com.trekko.api;
 
+import java.net.http.HttpRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -64,6 +67,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleNoResourceFoundException(final NoResourceFoundException ex) {
         final var errorResponse = new ErrorResponseDto(ResponseReason.FAILED_NOT_FOUND);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponseDto> handleHttpRequestMethodNotSupportedException(
+            final HttpRequestMethodNotSupportedException ex) {
+        final var errorResponse = new ErrorResponseDto(ResponseReason.FAILED_REQUEST_METHOD_NOT_SUPPORTED);
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)

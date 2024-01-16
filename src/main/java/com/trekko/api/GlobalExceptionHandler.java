@@ -1,7 +1,5 @@
 package com.trekko.api;
 
-import java.net.http.HttpRequest;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

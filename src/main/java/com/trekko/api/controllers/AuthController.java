@@ -3,7 +3,9 @@ package com.trekko.api.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import com.trekko.api.dtos.SignInRequestDto;
 import com.trekko.api.dtos.SignInResponseDto;
 import com.trekko.api.dtos.SignUpRequestDto;
 import com.trekko.api.dtos.SignUpResponseDto;
+import com.trekko.api.dtos.UserDto;
 import com.trekko.api.models.User;
 import com.trekko.api.repositories.UserRepository;
 import com.trekko.api.utils.AuthUtils;
@@ -73,5 +76,16 @@ public class AuthController {
     public ResponseEntity<?> forgotPassword() {
         // TODO
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/session")
+    public ResponseEntity<?> getSession() {
+        final var user = AuthUtils.getUserFromContext();
+        if (user == null)
+            return ResponseEntity.notFound().build();
+
+        final var sessionResponse = UserDto.from(user);
+        return ResponseEntity.ok().body(sessionResponse);
     }
 }

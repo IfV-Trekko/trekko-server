@@ -52,7 +52,7 @@ public class MongoDbConfig extends AbstractMongoClientConfiguration {
     }
 
     private String buildConnectionString() {
-        final StringBuilder connectionString = new StringBuilder("mongodb+srv://");
+        final StringBuilder connectionString = new StringBuilder("mongodb://");
         connectionString.append(user);
         if (!password.isEmpty()) {
             connectionString.append(":").append(password);

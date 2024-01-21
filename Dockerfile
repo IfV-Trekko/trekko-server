@@ -4,7 +4,7 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # Package stage
-FROM eclipse-temurin:17-alpine
+FROM bellsoft/liberica-openjdk-alpine-musl:17
 VOLUME /tmp
 COPY --from=build /target/api-0.0.1-SNAPSHOT.jar api.jar
 ENV PORT=8080

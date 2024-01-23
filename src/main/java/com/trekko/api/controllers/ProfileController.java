@@ -37,7 +37,14 @@ public class ProfileController {
     @GetMapping
     public ResponseEntity<?> getProfile() throws IOException {
         final var user = AuthUtils.getUserFromContext();
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(user.getProfile());
+
+        final String profile = user.getProfile();
+        if (profile == null) {
+            final var errorResponse = new ErrorResponseDto(ResponseReason.FAILED_PROFILE_NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
+
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(profile);
     }
 
     @PreAuthorize("isAuthenticated()")

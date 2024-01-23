@@ -40,7 +40,7 @@
             "type": "boolean"
           }
         },
-        "required": ["title", "key"]
+        "required": ["title", "key", "type", "required"]
       }
     }
   }

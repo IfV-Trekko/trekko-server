@@ -20,6 +20,7 @@ public class Form {
         private String key;
         private String type;
         private boolean required;
+        private String regex;
         private List<FormFieldOption> options;
 
         public String getTitle() {
@@ -36,6 +37,10 @@ public class Form {
 
         public boolean isRequired() {
             return this.required;
+        }
+
+        public String getRegex() {
+            return this.regex;
         }
 
         public List<FormFieldOption> getOptions() {

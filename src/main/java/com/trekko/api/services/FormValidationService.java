@@ -16,6 +16,7 @@ public class FormValidationService {
     private static final String BOOLEAN_FIELD_TYPE = "boolean";
     private static final String NUMBER_FIELD_TYPE = "number";
     private static final String SELECT_FIELD_TYPE = "select";
+    private static final String TEXT_FIELD_TYPE = "text";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -52,14 +53,26 @@ public class FormValidationService {
         }
 
         switch (templateField.getType()) {
-            case BOOLEAN_FIELD_TYPE:
+            case BOOLEAN_FIELD_TYPE -> {
                 return fieldValue.isBoolean();
-            case NUMBER_FIELD_TYPE:
+            }
+            case NUMBER_FIELD_TYPE -> {
                 return fieldValue.isNumber();
-            case SELECT_FIELD_TYPE:
+            }
+            case TEXT_FIELD_TYPE -> {
+                final String regex = templateField.getRegex();
+                if (regex != null && !regex.isEmpty()) {
+                    return fieldValue.isTextual() && fieldValue.asText().matches(regex);
+                } else {
+                    return fieldValue.isTextual();
+                }
+            }
+            case SELECT_FIELD_TYPE -> {
                 return this.isValidDropdownValue(templateField.getOptions(), fieldValue.asText());
-            default:
-                return true;
+            }
+            default -> {
+                return false;
+            }
         }
     }
 

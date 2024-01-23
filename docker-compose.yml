@@ -1,16 +1,19 @@
-version: '3'
+version: '3.1'
 
 services:
   app:
     image: trekko_server:latest
     build: .
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     ports:
       - "8080:8080"
 
   mongo:
     image: mongo
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin

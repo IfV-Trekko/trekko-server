@@ -4,6 +4,8 @@ services:
   app:
     image: trekko_server:latest
     build: .
+    depends_on:
+      - mongo
     ports:
       - "8080:8080"
 

@@ -8,6 +8,11 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.trekko.api.exceptions.JwtAuthException;
 
+/**
+ * Utility class for JWT-related functionalities.
+ * 
+ * @see com.trekko.api.interceptors.JwtAuthFilter
+ */
 public final class JwtUtils {
     private static final long EXPIRATION_TIME = 864_000_00; // 1 day in milliseconds
     private static final String SECRET = "TEST_SECRET"; // TODO
@@ -15,6 +20,13 @@ public final class JwtUtils {
     private JwtUtils() {
     }
 
+    /**
+     * Generates a JWT token for a given user ID.
+     *
+     * @param userId The {@link com.trekko.api.models.User User} id for which to
+     *               generate the token.
+     * @return A JWT token as a String.
+     */
     public static String generateToken(final String userId) {
         return JWT.create()
                 .withSubject(userId)
@@ -22,17 +34,31 @@ public final class JwtUtils {
                 .sign(Algorithm.HMAC512(SECRET.getBytes()));
     }
 
+    /**
+     * Checks if a JWT token is valid and not expired.
+     *
+     * @param token The JWT token to validate.
+     * @return true if the token is valid, false otherwise.
+     */
     public static boolean isTokenValid(final String token) {
         try {
             JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
                     .build()
                     .verify(token);
             return true;
-        } catch (final Exception ex) {
+        } catch (final JWTVerificationException ex) {
             return false;
         }
     }
 
+    /**
+     * Validates a JWT token and throws an exception if it is invalid or expired.
+     *
+     * @param token The JWT token to validate.
+     * @return {@code true} if the token is valid.
+     * @throws JwtAuthException if the token is invalid or expired.
+     * @see JwtAuthException
+     */
     public static boolean validateToken(final String token) throws JwtAuthException {
         try {
             JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
@@ -47,6 +73,12 @@ public final class JwtUtils {
         }
     }
 
+    /**
+     * Extracts the {@link com.trekko.api.models.User} id from a JWT token.
+     *
+     * @param token The JWT token from which to extract the user ID.
+     * @return The user id as a String.
+     */
     public static String getUserIdFromToken(final String token) {
         return JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
                 .build()

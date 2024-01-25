@@ -32,6 +32,13 @@
       "key": "age",
       "type": "number",
       "required": true
+    },
+    {
+      "title": "PLZ",
+      "key": "zip",
+      "type": "text",
+      "regex": "^[0-9]{5}$",
+      "required": true
     }
   ]
 }

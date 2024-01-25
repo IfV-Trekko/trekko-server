@@ -1,5 +1,6 @@
 {
   "homeOffice": false,
   "gender": "male",
-  "age": 21
+  "age": 21,
+  "zip": "12345"
 }

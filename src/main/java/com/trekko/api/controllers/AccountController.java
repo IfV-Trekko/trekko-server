@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,5 +56,11 @@ public class AccountController {
         userRepository.saveUser(user);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/")
+    public ResponseEntity<?> deleteAccount() {
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 }

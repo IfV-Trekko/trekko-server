@@ -3,10 +3,14 @@ package com.trekko.api.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
+@RequestMapping("/onboarding")
 public class OnboardingController {
     @GetMapping("/texts/about")
-    public ResponseEntity<?> getAboutText(@PathVariable final String uid) {
+    public ResponseEntity<?> getAboutText() {
         return ResponseEntity.ok()
                 .body("""
                             Wir sind das Institut für Verkehrswesen am KIT in der Fakultät
@@ -19,7 +23,7 @@ public class OnboardingController {
     }
 
     @GetMapping("/texts/goal")
-    public ResponseEntity<?> get(@PathVariable final String uid) {
+    public ResponseEntity<?> getGoalText() {
         return ResponseEntity.ok()
                 .body("""
                             Ihre Unterstützung beim Sammeln und Auswerten von Wegedaten

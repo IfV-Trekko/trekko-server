@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.trekko.api.utils.JsonUtils;
 import com.trekko.api.utils.ObjectIdSerializer;
 
 import dev.morphia.annotations.Entity;
@@ -80,6 +81,16 @@ public class User {
 
     public void setProfile(final String profile) {
         this.profile = profile;
+    }
+
+    public void updateProfile(final String updatedProfile) {
+        final String currentProfile = this.getProfile();
+
+        if (currentProfile == null) {
+            this.setProfile(updatedProfile);
+        } else {
+            this.setProfile(JsonUtils.merge(currentProfile, updatedProfile));
+        }
     }
 
     public void setEmailConfirmationCode(final String emailConfirmationCode) {

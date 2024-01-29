@@ -21,21 +21,27 @@ public class FormValidationService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public boolean validateFormData(final String formTemplateJson, final String submittedDataJson) {
+        return this.validateFormData(formTemplateJson, submittedDataJson, true);
+    }
+
+    public boolean validateFormData(final String formTemplateJson, final String submittedDataJson,
+            final boolean strict) {
         try {
             final Form formTemplate = this.objectMapper.readValue(formTemplateJson, Form.class);
             final JsonNode submittedData = this.objectMapper.readTree(submittedDataJson);
 
-            return this.validateFields(formTemplate.getFields(), submittedData);
+            return this.validateFields(formTemplate.getFields(), submittedData, strict);
         } catch (final JsonProcessingException e) {
             return false;
         }
     }
 
-    private boolean validateFields(final List<Form.FormField> templateFields, final JsonNode submittedData) {
+    private boolean validateFields(final List<Form.FormField> templateFields, final JsonNode submittedData,
+            final boolean strict) {
         for (final Form.FormField templateField : templateFields) {
             final JsonNode fieldValue = submittedData.get(templateField.getKey());
 
-            if (!this.isFieldValueValid(templateField, fieldValue)) {
+            if (!this.isFieldValueValid(templateField, fieldValue, strict)) {
                 return false;
             }
         }
@@ -47,9 +53,11 @@ public class FormValidationService {
         return true;
     }
 
-    private boolean isFieldValueValid(final Form.FormField templateField, final JsonNode fieldValue) {
-        if (fieldValue == null || fieldValue.isNull()) {
-            return !templateField.isRequired();
+    private boolean isFieldValueValid(final Form.FormField templateField, final JsonNode fieldValue,
+            final boolean strict) {
+        final boolean isUnset = fieldValue == null || fieldValue.isNull();
+        if (isUnset) {
+            return !templateField.isRequired() || !strict;
         }
 
         switch (templateField.getType()) {
@@ -87,6 +95,6 @@ public class FormValidationService {
                 submittedData.fieldNames(), Spliterator.ORDERED), false)
                 .collect(Collectors.toSet());
 
-        return !submittedFieldKeys.equals(templateFieldKeys);
+        return !templateFieldKeys.containsAll(submittedFieldKeys);
     }
 }

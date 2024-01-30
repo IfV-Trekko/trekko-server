@@ -1,12 +1,12 @@
 package com.trekko.api.models;
 
 public enum TransportType {
-    BYFOOT, BICYCLE, CAR, PUBLIC_TRANSPORT, SHIP, PLANE, OTHER;
+    BY_FOOT, BICYCLE, CAR, PUBLIC_TRANSPORT, SHIP, PLANE, OTHER;
 
     public static TransportType from(final String transportType) {
         switch (transportType) {
-            case "BYFOOT":
-                return BYFOOT;
+            case "BY_FOOT":
+                return BY_FOOT;
             case "BICYCLE":
                 return BICYCLE;
             case "CAR":

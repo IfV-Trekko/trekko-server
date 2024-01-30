@@ -12,7 +12,7 @@ import jakarta.validation.ConstraintValidatorContext;
 public class TransportTypeSetValidator implements ConstraintValidator<ValidTransportTypeSet, Set<String>> {
     // TODO: dont hardcode these values
     private static final Set<String> VALID_TRANSPORT_TYPES = new HashSet<>(Arrays.asList(
-            "BYFOOT", "BICYCLE", "CAR", "PUBLIC_TRANSPORT", "SHIP", "PLANE", "OTHER"));
+            "BY_FOOT", "BICYCLE", "CAR", "PUBLIC_TRANSPORT", "SHIP", "PLANE", "OTHER"));
 
     @Override
     public boolean isValid(final Set<String> value, final ConstraintValidatorContext context) {

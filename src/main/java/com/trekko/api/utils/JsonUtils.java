@@ -7,14 +7,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public final class JsonUtils {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private JsonUtils() {
     }
 
     public static Map<String, Object> parse(final String jsonString) {
         try {
-            return objectMapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {
+            return OBJECT_MAPPER.readValue(jsonString, new TypeReference<Map<String, Object>>() {
             });
         } catch (final JsonProcessingException e) {
             return null;
@@ -32,7 +32,7 @@ public final class JsonUtils {
 
     public static String stringify(final Map<String, Object> jsonMap) {
         try {
-            return objectMapper.writeValueAsString(jsonMap);
+            return OBJECT_MAPPER.writeValueAsString(jsonMap);
         } catch (final JsonProcessingException e) {
             return null;
         }

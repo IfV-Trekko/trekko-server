@@ -59,7 +59,7 @@ public class AccountController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<?> deleteAccount() {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }

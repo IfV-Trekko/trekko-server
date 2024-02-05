@@ -36,6 +36,10 @@ public class UserRepository {
                 .orElse(null);
     }
 
+    public void deleteUser(final User user) {
+        this.datastore.delete(user);
+    }
+
     public boolean existsByEmail(final String email) {
         return this.findUserByEmail(email) != null;
     }

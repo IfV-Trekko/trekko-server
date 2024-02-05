@@ -42,6 +42,11 @@ public class TripRepository {
                 .orElse(null);
     }
 
+    public void deleteAllTripsByUser(final User user) {
+        this.datastore.find(Trip.class).stream().filter(trip -> trip.getUser().getId().equals(user.getId()))
+                .forEach(this.datastore::delete);
+    }
+
     public List<Trip> getTripsByUser(final User user) {
         return this.datastore.find(Trip.class).stream().filter(trip -> trip.getUser().getId().equals(user.getId()))
                 .limit(DEFAULT_FETCH_LIMIT).toList();

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.trekko.api.dtos.ConfirmEmailRequestDto;
+import com.trekko.api.repositories.TripRepository;
 import com.trekko.api.repositories.UserRepository;
 import com.trekko.api.utils.AuthUtils;
 
@@ -24,10 +25,12 @@ import jakarta.validation.Valid;
 public class AccountController {
 
     private final UserRepository userRepository;
+    private final TripRepository tripRepository;
 
     @Autowired
-    public AccountController(final UserRepository userRepository) {
+    public AccountController(final UserRepository userRepository, final TripRepository tripRepository) {
         this.userRepository = userRepository;
+        this.tripRepository = tripRepository;
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -61,6 +64,13 @@ public class AccountController {
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping
     public ResponseEntity<?> deleteAccount() {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        final var user = AuthUtils.getUserFromContext();
+        if (user == null)
+            return ResponseEntity.badRequest().build();
+
+        tripRepository.deleteAllTripsByUser(user);
+        userRepository.deleteUser(user);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

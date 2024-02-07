@@ -14,7 +14,7 @@ import com.trekko.api.exceptions.JwtAuthException;
  * @see com.trekko.api.interceptors.JwtAuthFilter
  */
 public final class JwtUtils {
-    private static final long EXPIRATION_TIME = 864_000_00; // 1 day in milliseconds
+    private static final long EXPIRATION_TIME = 864_000_00 * 90; // 90 days in milliseconds
     private static final String SECRET = "TEST_SECRET"; // TODO
 
     private JwtUtils() {

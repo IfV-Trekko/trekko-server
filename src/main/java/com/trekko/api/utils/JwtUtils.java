@@ -1,5 +1,7 @@
 package com.trekko.api.utils;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 import com.auth0.jwt.JWT;
@@ -14,7 +16,7 @@ import com.trekko.api.exceptions.JwtAuthException;
  * @see com.trekko.api.interceptors.JwtAuthFilter
  */
 public final class JwtUtils {
-    private static final long EXPIRATION_TIME = 864_000_00 * 90; // 90 days in milliseconds
+    private static final int EXPIRES_IN_DAYS = 7;
     private static final String SECRET = "TEST_SECRET"; // TODO
 
     private JwtUtils() {
@@ -30,7 +32,7 @@ public final class JwtUtils {
     public static String generateToken(final String userId) {
         return JWT.create()
                 .withSubject(userId)
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .withExpiresAt(Date.from(Instant.now().plus(EXPIRES_IN_DAYS, ChronoUnit.DAYS)))
                 .sign(Algorithm.HMAC512(SECRET.getBytes()));
     }
 

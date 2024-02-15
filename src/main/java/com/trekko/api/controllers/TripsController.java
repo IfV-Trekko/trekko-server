@@ -47,12 +47,6 @@ public class TripsController {
     @PostMapping
     public ResponseEntity<?> addTrip(@Valid @RequestBody final TripDto tripDto) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
-
-        // final var user = AuthUtils.getUserFromContext();
-        // final var trip = Trip.fromDto(tripDto, user);
-        // this.tripRepository.saveTrip(trip);
-        // return
-        // ResponseEntity.status(HttpStatus.CREATED).body(RichTripDto.from(trip));
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -61,11 +55,10 @@ public class TripsController {
         final var user = AuthUtils.getUserFromContext();
 
         // check if any of the trips already exist
-        for (final var tripDto : tripDtos) {
-            if (this.tripRepository.existsTripByUid(tripDto.getUid(), user)) {
-                final var errorResponse = new ErrorResponseDto(ResponseReason.FAILED_RESOURCE_CONFLICT);
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-            }
+        final List<String> tripsUids = Arrays.stream(tripDtos).map(TripDto::getUid).collect(Collectors.toList());
+        if (this.tripRepository.existTripsWithUids(tripsUids, user)) {
+            final var errorResponse = new ErrorResponseDto(ResponseReason.FAILED_RESOURCE_CONFLICT);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
         }
 
         final List<Trip> trips = Arrays.stream(tripDtos).map(tripDto -> Trip.fromDto(tripDto, user))

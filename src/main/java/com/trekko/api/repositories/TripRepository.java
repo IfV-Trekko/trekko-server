@@ -57,6 +57,11 @@ public class TripRepository {
                 .anyMatch(trip -> trip.getUid().equals(uid) && trip.getUser().getId().equals(user.getId()));
     }
 
+    public boolean existTripsWithUids(final List<String> uids, final User user) {
+        return this.datastore.find(Trip.class).stream()
+                .anyMatch(trip -> uids.contains(trip.getUid()) && trip.getUser().getId().equals(user.getId()));
+    }
+
     public void deleteTrip(final Trip trip) {
         this.datastore.delete(trip);
     }

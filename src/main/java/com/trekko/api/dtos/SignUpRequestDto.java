@@ -10,6 +10,11 @@ public class SignUpRequestDto {
     @ValidPassword(message = "FAILED_INVALID_PASSWORD")
     private String password;
 
+    public SignUpRequestDto(final String email, final String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     public String getEmail() {
         return this.email;
     }

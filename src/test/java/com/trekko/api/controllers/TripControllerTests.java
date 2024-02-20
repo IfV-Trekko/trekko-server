@@ -1,12 +1,15 @@
 package com.trekko.api.controllers;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Set;
@@ -73,10 +76,22 @@ public class TripControllerTests {
     }
 
     @Test
+    public void testRetrieveExistingTrip() throws Exception {
+        final Trip mockTrip = mock(Trip.class);
+
+        when(this.tripRepository.findTripByUid(anyString(), any(User.class))).thenReturn(mockTrip);
+
+        this.mockMvc.perform(get("/trips/uid1"))
+                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        verify(this.tripRepository).findTripByUid(anyString(), any(User.class));
+    }
+
+    @Test
     public void testUpdateExistingTripWithValidData() throws Exception {
         final Trip mockTrip = mock(Trip.class);
 
-        when(this.tripRepository.findTripByUid(any(String.class), any(User.class))).thenReturn(mockTrip);
+        when(this.tripRepository.findTripByUid(anyString(), any(User.class))).thenReturn(mockTrip);
         doNothing().when(mockTrip).updateFromDto(any(TripDto.class));
         doNothing().when(this.tripRepository).saveTrip(any(Trip.class));
 
@@ -88,20 +103,20 @@ public class TripControllerTests {
                         .content(this.objectMapper.writeValueAsString(tripDto)))
                 .andExpect(status().isOk());
 
-        verify(this.tripRepository).findTripByUid(any(String.class), any(User.class));
+        verify(this.tripRepository).findTripByUid(anyString(), any(User.class));
         verify(mockTrip).updateFromDto(any(TripDto.class));
         verify(this.tripRepository).saveTrip(any(Trip.class));
     }
 
     @Test
     public void testDeleteExistingTrip() throws Exception {
-        when(this.tripRepository.findTripByUid(any(String.class), any(User.class))).thenReturn(new Trip());
+        when(this.tripRepository.findTripByUid(anyString(), any(User.class))).thenReturn(new Trip());
         doNothing().when(this.tripRepository).deleteTrip(any(Trip.class));
 
-        this.mockMvc.perform(delete("/trips/uid1").contentType(MediaType.APPLICATION_JSON).content("null"))
+        this.mockMvc.perform(delete("/trips/uid1"))
                 .andExpect(status().is2xxSuccessful());
 
-        verify(this.tripRepository).findTripByUid(any(String.class), any(User.class));
+        verify(this.tripRepository).findTripByUid(anyString(), any(User.class));
         verify(this.tripRepository).deleteTrip(any(Trip.class));
     }
 }

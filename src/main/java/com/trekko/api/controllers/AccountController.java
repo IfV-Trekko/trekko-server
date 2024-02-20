@@ -33,10 +33,34 @@ public class AccountController {
         this.tripRepository = tripRepository;
     }
 
+    /**
+     * Generates a new email confirmation code and sends it to the user's email.
+     * 
+     * TODO: This handler should be decorated with additional rate limiting and
+     * other security measures.
+     * 
+     * @return {@link ResponseEntity} with status code 204 if the email was sent
+     *         successfully, 404 if the user is not found, or 409 if the user's
+     *         email is already confirmed.
+     */
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/email/confirmation")
     public ResponseEntity<?> getEmailConfirmationCode() {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        final var user = AuthUtils.getUserFromContext();
+        if (user == null)
+            return ResponseEntity.notFound().build();
+
+        if (user.isEmailConfirmed())
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+
+        final String code = AuthUtils.generateEmailConfirmationCode();
+
+        // TODO: Send email through email service
+
+        user.setEmailConfirmationCode(code);
+        userRepository.saveUser(user);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PreAuthorize("isAuthenticated()")

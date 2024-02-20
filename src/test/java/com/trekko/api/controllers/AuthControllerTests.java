@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -21,6 +22,7 @@ import com.trekko.api.dtos.SignInRequestDto;
 import com.trekko.api.dtos.SignUpRequestDto;
 import com.trekko.api.models.User;
 import com.trekko.api.repositories.UserRepository;
+import com.trekko.api.utils.AuthUtils;
 import com.trekko.api.utils.CustomUserDetails;
 
 @WebMvcTest(AuthController.class)
@@ -84,5 +86,25 @@ public class AuthControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(signUpRequestDto)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testSignInWithValidCredentials() throws Exception {
+        final String plainPassword = "ABcd56_.";
+
+        when(this.userRepository.findUserByEmail(anyString())).thenReturn(this.user);
+        when(this.user.getPasswordHash()).thenReturn(AuthUtils.hashPassword(plainPassword));
+        when(this.user.getId()).thenReturn(new ObjectId());
+
+        final var signInRequestDto = new SignInRequestDto("test@example.com", plainPassword);
+
+        this.mockMvc.perform(post("/auth/signin")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(signInRequestDto)))
+                .andExpect(status().isOk());
+
+        verify(userRepository).findUserByEmail(anyString());
+        verify(user).getPasswordHash();
+        verify(user).getId();
     }
 }

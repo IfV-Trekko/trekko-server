@@ -6,9 +6,11 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -72,6 +74,14 @@ public class TripsControllerTests {
     }
 
     @Test
+    void testGetTrips() throws Exception {
+        when(this.tripRepository.getTripsByUser(any(User.class))).thenReturn(List.of());
+
+        this.mockMvc.perform(get("/trips"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void testBatchAddTripsWithSingleTrip() throws Exception {
         when(this.tripRepository.existTripsWithUids(anyList(), any(User.class))).thenReturn(false);
         doNothing().when(this.tripRepository).saveTrips(anyList());
@@ -123,5 +133,34 @@ public class TripsControllerTests {
 
         verify(this.tripRepository).existTripsWithUids(anyList(), any(User.class));
         verify(this.tripRepository).saveTrips(anyList());
+    }
+
+    @Test
+    void testBatchAddTripsWithMultipleTripsAndExistingTrip() throws Exception {
+        when(this.tripRepository.existTripsWithUids(anyList(), any(User.class))).thenReturn(true);
+
+        final TripDto[] tripDtos = new TripDto[] {
+                new TripDto("uid1", 1708010669467L, 1708010669667L, 20, Set.of(TransportType.BY_FOOT.name())),
+                new TripDto("uid2", 1708010669467L, 1708010669667L, 20,
+                        Set.of(TransportType.BICYCLE.name(), TransportType.CAR.name()))
+        };
+
+        this.mockMvc.perform(post("/trips/batch")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(tripDtos)))
+                .andExpect(status().isConflict());
+
+        verify(this.tripRepository).existTripsWithUids(anyList(), any(User.class));
+    }
+
+    @Test
+    void testAddSingleTrip() throws Exception {
+        final TripDto tripDto = new TripDto("uid1", 1708010669467L, 1708010669667L, 20,
+                Set.of(TransportType.CAR.name()));
+
+        this.mockMvc.perform(post("/trips")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(tripDto)))
+                .andExpect(status().isNotImplemented());
     }
 }

@@ -91,6 +91,20 @@ public class AuthControllerTests {
     }
 
     @Test
+    public void testSignUpWithExistingEmail() throws Exception {
+        when(this.userRepository.existsByEmail(anyString())).thenReturn(true);
+
+        final var signUpRequestDto = new SignUpRequestDto("test@example.com", "ABcd56_.");
+
+        this.mockMvc.perform(post("/auth/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(signUpRequestDto)))
+                .andExpect(status().isBadRequest());
+
+        verify(userRepository).existsByEmail(anyString());
+    }
+
+    @Test
     public void testSignUpWithInvalidEmail() throws Exception {
         final var signUpRequestDto = new SignUpRequestDto("invalid_email", "ABcd56_.");
 

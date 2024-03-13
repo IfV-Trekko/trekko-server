@@ -90,6 +90,14 @@ public class AccountControllerTests {
     }
 
     @Test
+    public void testGetEmailConfirmationCodeWhenUserIsNotFound() throws Exception {
+        when(this.customUserDetails.getUser()).thenReturn(null);
+
+        this.mockMvc.perform(get("/account/email/confirmation"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void testConfirmEmailWithValidCode() throws Exception {
         final String code = AuthUtils.generateEmailConfirmationCode();
         final ConfirmEmailRequestDto confirmEmailRequest = new ConfirmEmailRequestDto(code);
@@ -130,6 +138,14 @@ public class AccountControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(confirmEmailRequest)))
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void testConfirmEmailWhenUserIsNotFound() throws Exception {
+        when(this.customUserDetails.getUser()).thenReturn(null);
+
+        this.mockMvc.perform(post("/account/email/confirmation"))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

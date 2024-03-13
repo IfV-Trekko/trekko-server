@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(JwtAuthException.class)
     public ResponseEntity<ErrorResponseDto> handleJwtAuthException(final JwtAuthException ex) {
-        final var errorResponse = new ErrorResponseDto(ex.getReason());
+        final var errorResponse = new ErrorResponseDto(ResponseReason.FAILED_ACCESS_DENIED);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 

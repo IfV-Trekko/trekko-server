@@ -82,7 +82,18 @@ public class TripControllerTests {
         when(this.tripRepository.findTripByUid(anyString(), any(User.class))).thenReturn(mockTrip);
 
         this.mockMvc.perform(get("/trips/uid1"))
-                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        verify(this.tripRepository).findTripByUid(anyString(), any(User.class));
+    }
+
+    @Test
+    public void testRetrieveNonExistingTrip() throws Exception {
+        when(this.tripRepository.findTripByUid(anyString(), any(User.class))).thenReturn(null);
+
+        this.mockMvc.perform(get("/trips/uid1"))
+                .andExpect(status().isNotFound());
 
         verify(this.tripRepository).findTripByUid(anyString(), any(User.class));
     }
@@ -109,6 +120,32 @@ public class TripControllerTests {
     }
 
     @Test
+    public void testUpdateExistingTripWithInvalidData() throws Exception {
+        final TripDto tripDto = new TripDto("uid1", 1708010669467L, 1708010669667L, 20,
+                Set.of("INVALID_TRANSPORT_TYPE"));
+
+        this.mockMvc
+                .perform(put("/trips/uid1").contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(tripDto)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testUpdateNonExistingTrip() throws Exception {
+        when(this.tripRepository.findTripByUid(anyString(), any(User.class))).thenReturn(null);
+
+        final TripDto tripDto = new TripDto("uid1", 1708010669467L, 1708010669667L, 20,
+                Set.of(TransportType.CAR.name()));
+
+        this.mockMvc
+                .perform(put("/trips/uid1").contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(tripDto)))
+                .andExpect(status().isNotFound());
+
+        verify(this.tripRepository).findTripByUid(anyString(), any(User.class));
+    }
+
+    @Test
     public void testDeleteExistingTrip() throws Exception {
         when(this.tripRepository.findTripByUid(anyString(), any(User.class))).thenReturn(new Trip());
         doNothing().when(this.tripRepository).deleteTrip(any(Trip.class));
@@ -118,5 +155,15 @@ public class TripControllerTests {
 
         verify(this.tripRepository).findTripByUid(anyString(), any(User.class));
         verify(this.tripRepository).deleteTrip(any(Trip.class));
+    }
+
+    @Test
+    public void testDeleteNonExistingTrip() throws Exception {
+        when(this.tripRepository.findTripByUid(anyString(), any(User.class))).thenReturn(null);
+
+        this.mockMvc.perform(delete("/trips/uid1"))
+                .andExpect(status().isNotFound());
+
+        verify(this.tripRepository).findTripByUid(anyString(), any(User.class));
     }
 }

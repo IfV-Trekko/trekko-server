@@ -120,6 +120,19 @@ public class AccountControllerTests {
     }
 
     @Test
+    public void testConfirmEmailWhenUserIsAlreadyConfirmed() throws Exception {
+        final String code = AuthUtils.generateEmailConfirmationCode();
+        final ConfirmEmailRequestDto confirmEmailRequest = new ConfirmEmailRequestDto(code);
+
+        when(this.user.isEmailConfirmed()).thenReturn(true);
+
+        this.mockMvc.perform(post("/account/email/confirmation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(confirmEmailRequest)))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
     public void testDeleteAccount() throws Exception {
         doNothing().when(this.tripRepository).deleteAllTripsByUser(this.user);
         doNothing().when(this.userRepository).deleteUser(this.user);
@@ -129,5 +142,13 @@ public class AccountControllerTests {
 
         verify(this.tripRepository).deleteAllTripsByUser(this.user);
         verify(this.userRepository).deleteUser(this.user);
+    }
+
+    @Test
+    public void testDeleteAccountWhenUserIsNotFound() throws Exception {
+        when(this.customUserDetails.getUser()).thenReturn(null);
+
+        this.mockMvc.perform(delete("/account"))
+                .andExpect(status().isBadRequest());
     }
 }

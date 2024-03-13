@@ -23,7 +23,9 @@ public class UserDto {
             final Date createdAt,
             final Date updatedAt) {
         this.id = id;
+        this.email = email;
         this.emailConfirmed = emailConfirmed;
+        this.profile = profile;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }

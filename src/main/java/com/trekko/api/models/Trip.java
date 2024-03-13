@@ -21,8 +21,8 @@ public class Trip {
 
     @Id
     @JsonSerialize(using = ObjectIdSerializer.class)
-    private final ObjectId id;
-    private final String uid;
+    private ObjectId id;
+    private String uid;
 
     private long startTimestamp;
     private long endTimetamp;
@@ -67,8 +67,16 @@ public class Trip {
         return this.id;
     }
 
+    public void setId(final ObjectId id) {
+        this.id = id;
+    }
+
     public String getUid() {
         return this.uid;
+    }
+
+    public void setUid(final String uid) {
+        this.uid = uid;
     }
 
     public long getStartTimestamp() {

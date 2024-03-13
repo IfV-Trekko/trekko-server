@@ -19,8 +19,8 @@ public class User {
 
     @Id
     @JsonSerialize(using = ObjectIdSerializer.class)
-    private final ObjectId id;
-    private final String email;
+    private ObjectId id;
+    private String email;
     private final String passwordHash;
 
     private String emailConfirmationCode;
@@ -49,8 +49,16 @@ public class User {
         return this.id;
     }
 
+    public void setId(final ObjectId id) {
+        this.id = id;
+    }
+
     public String getEmail() {
         return this.email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
     }
 
     @JsonIgnore

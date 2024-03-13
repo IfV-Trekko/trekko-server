@@ -17,7 +17,7 @@ import com.trekko.api.exceptions.JwtAuthException;
  */
 public final class JwtUtils {
     private static final int EXPIRES_IN_DAYS = 7;
-    private static final String SECRET = "TEST_SECRET"; // TODO
+    public static final String SECRET = "TEST_SECRET"; // TODO
 
     private JwtUtils() {
     }

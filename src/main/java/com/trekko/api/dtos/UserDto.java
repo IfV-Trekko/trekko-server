@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.bson.types.ObjectId;
 
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.trekko.api.models.User;
 import com.trekko.api.utils.ObjectIdSerializer;
@@ -42,6 +43,7 @@ public class UserDto {
         return this.emailConfirmed;
     }
 
+    @JsonRawValue
     public String getProfile() {
         return this.profile;
     }

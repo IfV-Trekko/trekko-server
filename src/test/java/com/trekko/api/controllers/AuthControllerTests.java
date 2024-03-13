@@ -152,12 +152,26 @@ public class AuthControllerTests {
     public void testSignInWithInvalidEmail() throws Exception {
         final var signInRequestDto = new SignInRequestDto("invalid_email", "ABcd56_.");
 
+        this.mockMvc.perform(post("/auth/signin")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(signInRequestDto)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testSignInEmailNotFound() throws Exception {
+        final String plainPassword = "ABcd56_.";
+
         when(this.userRepository.findUserByEmail(anyString())).thenReturn(null);
+
+        final var signInRequestDto = new SignInRequestDto("test@example.com", plainPassword);
 
         this.mockMvc.perform(post("/auth/signin")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(signInRequestDto)))
                 .andExpect(status().isBadRequest());
+
+        verify(userRepository).findUserByEmail(anyString());
     }
 
     @Test
@@ -182,5 +196,12 @@ public class AuthControllerTests {
     public void testGetSession() throws Exception {
         this.setupAuthentication();
         this.mockMvc.perform(get("/auth/session")).andExpect(status().isOk());
+    }
+
+    @Test
+    public void testGetSessionUserNotFound() throws Exception {
+        this.setupAuthentication();
+        when(this.customUserDetails.getUser()).thenReturn(null);
+        this.mockMvc.perform(get("/auth/session")).andExpect(status().isNotFound());
     }
 }

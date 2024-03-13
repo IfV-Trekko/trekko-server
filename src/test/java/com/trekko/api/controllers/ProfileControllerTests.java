@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trekko.api.interceptors.JwtAuthFilter;
 import com.trekko.api.models.User;
 import com.trekko.api.repositories.TripRepository;
@@ -42,8 +41,6 @@ public class ProfileControllerTests {
     private CustomUserDetails customUserDetails;
     @Mock
     private User user;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void setupAuthentication() {

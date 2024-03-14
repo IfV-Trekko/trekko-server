@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class TripRepositoryTest {
+class TripRepositoryTests {
 
     @Mock
     private Datastore datastore;

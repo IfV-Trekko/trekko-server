@@ -1,8 +1,31 @@
 # trekko (Server-Backend)
 
-### REST API Documentation
+## Installation & Setup
 
-# Overview
+### Prerequisites
+
+- Java 21
+- Maven 3.9.5 _oder den inkludierten Maven Wrapper_
+- Docker _latest_
+
+### Build with Docker
+
+Build & deploy the MongoDB and Java Spring App on local Docker containers automatically:
+
+```
+docker-compose up
+```
+
+The project is then locally reachable at `localhost:8080`.
+
+### Learn More
+
+To learn more about the tech stack, take a look at the following resources:
+
+- [Spring Documentation](https://docs.spring.io/spring-framework/reference/index.html) - Spring Framework Documentation
+- [MongoDB Morphia Documentation](https://www.mongodb.com/languages/morphia) - Morphia is a wrapper around the Java driver for MongoDB
+
+# REST API Documentation
 
 All production-grade endpoints are accessed from a single project server deployment url. Unless explicitly stated otherwise, data exchange occurs in JSON format.
 

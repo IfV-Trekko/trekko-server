@@ -38,7 +38,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void saveUser_savesUserSuccessfully() {
+    public void saveUser_savesUserSuccessfully() {
         final User user = new User();
         when(datastore.save(any(User.class))).thenReturn(user);
 
@@ -49,7 +49,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void findUserById_findsUser() {
+    public void findUserById_findsUser() {
         final ObjectId id = new ObjectId();
         final User user = new User();
         user.setId(id);
@@ -63,7 +63,17 @@ class UserRepositoryTest {
     }
 
     @Test
-    void findUserByEmail_findsUser() {
+    public void findUserById_returnsNullIfNotFound() {
+        final ObjectId id = new ObjectId();
+
+        when(query.stream()).thenReturn(Stream.empty());
+
+        final User found = userRepository.findUserById(id);
+        assertNull(found);
+    }
+
+    @Test
+    public void findUserByEmail_findsUser() {
         final String email = "test@example.com";
         final User user = new User();
         user.setEmail(email);
@@ -77,14 +87,24 @@ class UserRepositoryTest {
     }
 
     @Test
-    void deleteUser_deletesUser() {
+    public void findUserByEmail_returnsNullIfNotFound() {
+        final String email = "invalid_email@example.com";
+
+        when(query.stream()).thenReturn(Stream.empty());
+
+        final User found = userRepository.findUserByEmail(email);
+        assertNull(found);
+    }
+
+    @Test
+    public void deleteUser_deletesUser() {
         final User user = new User();
         userRepository.deleteUser(user);
         verify(datastore, times(1)).delete(user);
     }
 
     @Test
-    void existsByEmail_checksExistence() {
+    public void existsByEmail_checksExistence() {
         final String email = "exists@example.com";
         final User user = new User();
         user.setEmail(email);
@@ -94,5 +114,15 @@ class UserRepositoryTest {
         boolean exists = userRepository.existsByEmail(email);
 
         assertTrue(exists);
+    }
+
+    @Test
+    public void existsByEmail_returnsFalseIfNotFound() {
+        final String email = "invalid_email@example.com";
+
+        when(query.stream()).thenReturn(Stream.empty());
+
+        boolean exists = userRepository.existsByEmail(email);
+        assertFalse(exists);
     }
 }

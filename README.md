@@ -18,6 +18,14 @@ docker-compose up
 
 The project is then locally reachable at `localhost:8080`.
 
+### Run tests
+
+All Server tests can be ran using:
+
+```
+mvn test
+```
+
 ### Learn More
 
 To learn more about the tech stack, take a look at the following resources:
